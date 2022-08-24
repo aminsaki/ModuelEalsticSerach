@@ -4,7 +4,6 @@ namespace Holoo\ModuleElasticsearch\Adapter;
 
 use Elastic\Elasticsearch\Exception\MissingParameterException;
 use Holoo\ModuleElasticsearch\Adapter\Interfaces\ElasticClientInterface;
-use http\Client\Response;
 
 class Client implements ElasticClientInterface
 {
@@ -22,7 +21,10 @@ class Client implements ElasticClientInterface
     {
         try {
             $client=new \GuzzleHttp\Client([
-                'headers'=>['Content-Type'=>'application/json', 'Accept'=>'application/json']
+                'http_errors'=>false,
+                'verify'=>false,
+                'headers'=>self::setHeader($header)
+
             ]);
             $response=self::getResponse($client, $method, $host, $params);
             $response=$response->getBody()->getContents();
@@ -42,7 +44,10 @@ class Client implements ElasticClientInterface
         if ( !empty($header) ) {
             return $header;
         }
-        return $header=['Content-Type:application/json', 'Accept: application/json'];
+        return $headers = [
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ];
     }
 
     /**
@@ -53,7 +58,6 @@ class Client implements ElasticClientInterface
     {
         return (!empty($host)) ? self::DEFAULT_HOST . $host : self::DEFAULT_HOST;
     }
-
 
     /**
      * @param \GuzzleHttp\Client $client
