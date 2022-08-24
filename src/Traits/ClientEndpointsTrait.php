@@ -81,6 +81,7 @@ trait ClientEndpointsTrait
      */
     protected static function encode($value): string
     {
+         dd($value , self::convertValue($value) ,  urlencode(self::convertValue($value)));
         return urlencode(self::convertValue($value));
     }
 }

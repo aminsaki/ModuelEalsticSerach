@@ -1,5 +1,5 @@
 {
-    "name": "a.saki/module-elasticsearch",
+    "name": "holoo/module-elasticsearch",
     "description": "create module elastic for laravel",
     "license": "MIT",
     "autoload": {
