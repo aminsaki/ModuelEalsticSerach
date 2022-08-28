@@ -27,25 +27,25 @@ interface ClientAdapterInterface
      * @param array $params
      * @return mixed
      */
-    public static  function updateByQuery(array $params=[]);
+    public static function updateByQuery(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public  static function update(array $params=[]);
+    public static function update(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static  function get(array $params=[]);
+    public static function get(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function query(array $params = []);
+    public static function query(array $params=[]);
 
     /**
      * @param array $params
@@ -57,6 +57,20 @@ interface ClientAdapterInterface
      * @param array $params
      * @return mixed
      */
-    public static function bulk(array $params = []);
+    public static function bulk(array $params=[]);
+
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public static function deleteByQuery(array $params=[]);
+
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public static function mget(array $params = []);
+
+
 
 }

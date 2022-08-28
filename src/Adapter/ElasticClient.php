@@ -132,6 +132,43 @@ class ElasticClient extends Client implements ClientAdapterInterface
     }
 
     /**
+     * Deletes documents matching the provided query.
+     * @param array $params
+     * @return mixed
+     */
+    public static function deleteByQuery(array $params = [])
+    {
+        self::checkRequiredParameters(['index','body'], $params);
+        $url = '/' . self::encode($params['index']) . '/_delete_by_query';
+        $method = 'POST';
+
+        $url = self::addQueryString($url, $params, ['analyzer','analyze_wildcard','default_operator','df','from','ignore_unavailable','allow_no_indices','conflicts','expand_wildcards','lenient','preference','q','routing','scroll','search_type','search_timeout','max_docs','sort','terminate_after','stats','version','request_cache','refresh','timeout','wait_for_active_shards','scroll_size','wait_for_completion','requests_per_second','slices','pretty','human','error_trace','source','filter_path']);
+
+        return self::send($method, $url, $params['body'], null , null);
+    }
+
+    /**
+     * Allows to get multiple documents in one request.
+     * @param array $params
+     * @return string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function mget(array $params = [])
+    {
+        self::checkRequiredParameters(['body'], $params);
+        if (isset($params['index'])) {
+            $url = '/' . self::encode($params['index']) . '/_mget';
+            $method = empty($params['body']) ? 'GET' : 'POST';
+        } else {
+            $url = '/_mget';
+            $method = empty($params['body']) ? 'GET' : 'POST';
+        }
+        $url = self::addQueryString($url, $params, ['stored_fields','preference','realtime','refresh','routing','_source','_source_excludes','_source_includes','pretty','human','error_trace','source','filter_path']);
+
+        return self::send($method, $url, $params['body'], null , null);
+    }
+
+    /**
      * Executes a SQL request
      * @param array $params
      * @return mixed
@@ -173,4 +210,6 @@ class ElasticClient extends Client implements ClientAdapterInterface
         return self::send($method, $url, $params['body'], $headers ,'bulk');
 
     }
+
+
 }
