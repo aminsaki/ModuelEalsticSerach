@@ -13,5 +13,5 @@ interface ElasticClientInterface
      * @param array|null $header
      * @return mixed
      */
-    public static  function send(string $method = null , string $host = null, array $params = null , array $header = null);
+    public static function send(string $method=null, string $host=null, array $params=null, array $header=null, $type= null);
 }

@@ -7,6 +7,7 @@ use Holoo\ModuleElasticsearch\Adapter\Interfaces\ElasticClientInterface;
 
 class Client implements ElasticClientInterface
 {
+    protected static array $data=[];
     const DEFAULT_HOST='localhost:9200';
 
     /**
@@ -17,7 +18,7 @@ class Client implements ElasticClientInterface
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function send($method="get", string $host=null, array $params=null, array $header=null)
+    public static function send($method="get", string $host=null, array $params=null, array $header=null, $type=null)
     {
         try {
             $client=new \GuzzleHttp\Client([
@@ -26,9 +27,9 @@ class Client implements ElasticClientInterface
                 'headers'=>self::setHeader($header)
 
             ]);
-            $response=self::getResponse($client, $method, $host, $params);
+            $response=self::getResponse($client, $method, $host, $params, $type);
             $response=$response->getBody()->getContents();
-             return $response;
+            return $response;
 
         } catch (GuzzleException  $exception) {
             throw new \Exception($exception->getMessage());
@@ -44,9 +45,9 @@ class Client implements ElasticClientInterface
         if ( !empty($header) ) {
             return $header;
         }
-        return $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
+        return $headers=[
+            'Accept'=>'application/json',
+            'Content-Type'=>'application/json',
         ];
     }
 
@@ -67,16 +68,55 @@ class Client implements ElasticClientInterface
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private static function getResponse(\GuzzleHttp\Client $client, string $method, ?string $host, ?array $params): \Psr\Http\Message\ResponseInterface
+    private static function getResponse(\GuzzleHttp\Client $client, string $method, ?string $host, ?array $params, ?string $type): \Psr\Http\Message\ResponseInterface
     {
-        if ( !empty($params) ) {
-            return $client->request($method, self::setHost($host),
-                [
-                    'body'=>json_encode($params),
-                ]
-            );
+
+        if (!empty($type) || $type=="bulk" ) {
+            return self::requestBody($client, $method, $host, join("\n", self::getDataParam($params)) . "\n");
         }
+
+        if ( !empty($params) ) {
+            return self::requestBody($client, $method, $host, json_encode($params));
+        }
+
         return $client->request(strtoupper($method), self::setHost($host));
+    }
+
+    /**
+     * @param \GuzzleHttp\Client $client
+     * @param string $method
+     * @param string|null $host
+     * @param $params
+     * @return \Psr\Http\Message\ResponseInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private static function requestBody(\GuzzleHttp\Client $client, string $method, ?string $host, $params): \Psr\Http\Message\ResponseInterface
+    {
+        return $client->request($method, self::setHost($host),
+            [
+                'body'=>$params,
+            ]
+        );
+    }
+
+    /**
+     * @param $params
+     * @return array
+     */
+    private static function getDataParam($params)
+    {
+        $count=count($params);
+
+        for($i=0; $i < $count; $i++) {
+            $val=$params[$i];
+            if ( ($i % 2) == 0 )
+                self::$data[]=json_encode([array_keys($val)[0]=>array_values($val)[0], JSON_FORCE_OBJECT]);
+            else
+                self::$data[]=json_encode($val);
+
+        }
+        $result=self::$data;
+        return $result;
     }
 
 }

@@ -53,4 +53,10 @@ interface ClientAdapterInterface
      */
     public static function delete(array $params=[]);
 
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public static function bulk(array $params = []);
+
 }
