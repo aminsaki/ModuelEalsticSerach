@@ -7,7 +7,7 @@ use Holoo\ModuleElasticsearch\Adapter\Interfaces\ElasticClientInterface;
 
 class Client implements ElasticClientInterface
 {
-    protected static array $data=[];
+
     const DEFAULT_HOST='localhost:9200';
 
     /**
@@ -42,9 +42,10 @@ class Client implements ElasticClientInterface
      */
     private static function setHeader($header): mixed
     {
-        if ( !empty($header) ) {
+        if ( !empty($header) )
             return $header;
-        }
+
+
         return $headers=[
             'Accept'=>'application/json',
             'Content-Type'=>'application/json',
@@ -71,8 +72,8 @@ class Client implements ElasticClientInterface
     private static function getResponse(\GuzzleHttp\Client $client, string $method, ?string $host, ?array $params, ?string $type): \Psr\Http\Message\ResponseInterface
     {
 
-        if (!empty($type) || $type=="bulk" ) {
-            return self::requestBody($client, $method, $host, join("\n", self::getDataParam($params)) . "\n");
+        if ( !empty($type) || $type == "bulk" ) {
+            return self::requestBody($client, $method, $host, join("\n", self::RequestArrayMethod($params)) . "\n");
         }
 
         if ( !empty($params) ) {
@@ -100,22 +101,19 @@ class Client implements ElasticClientInterface
     }
 
     /**
+     * Send the request to the array method
      * @param $params
      * @return array
      */
-    private static function getDataParam($params)
+    private static function RequestArrayMethod($params)
     {
         $count=count($params);
 
         for($i=0; $i < $count; $i++) {
             $val=$params[$i];
-            if ( ($i % 2) == 0 )
-                self::$data[]=json_encode([array_keys($val)[0]=>array_values($val)[0], JSON_FORCE_OBJECT]);
-            else
-                self::$data[]=json_encode($val);
-
+            $data[]=(($i % 2) == 0) ? json_encode([array_keys($val)[0]=>array_values($val)[0]]) : json_encode($val);
         }
-        $result=self::$data;
+        $result=$data;
         return $result;
     }
 
