@@ -69,8 +69,12 @@ interface ClientAdapterInterface
      * @param array $params
      * @return mixed
      */
-    public static function mget(array $params = []);
+    public static function mget(array $params=[]);
 
-
+    /**
+     * @param array $params
+     * @return mixed
+     */
+    public static function reindex(array $params=[]);
 
 }

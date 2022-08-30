@@ -211,5 +211,26 @@ class ElasticClient extends Client implements ClientAdapterInterface
 
     }
 
+    /**
+     * /**
+     * Allows to copy documents from one index to another, optionally filtering the source
+     * documents by a query, changing the destination index settings, or fetching the
+     * documents from a remote cluster.
+     * @param array $params
+     * @return mixed|string
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public static function reindex(array $params = [])
+    {
+        self::checkRequiredParameters(['body'], $params);
+        $url = '/_reindex';
+        $method = 'POST';
+
+        $url = self::addQueryString($url, $params, ['refresh','timeout','wait_for_active_shards','wait_for_completion','requests_per_second','scroll','slices','max_docs','pretty','human','error_trace','source','filter_path']);
+
+        return self::send($method, $url, $params['body'], null , null);
+    }
+
+
 
 }
