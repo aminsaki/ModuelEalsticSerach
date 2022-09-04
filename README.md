@@ -33,3 +33,13 @@ You can install the client in your PHP project using composer:
     
  ]
  ...
+ 
+#Environment Configuration  .env
+ 
+ Add the following code in the .env section  
+ 
+   ...
+     
+       ELASTIC_SEARCH ='localhost:9200'  
+   ...
+  
