@@ -4,32 +4,29 @@ namespace Holoo\ModuleElasticsearch\Adapter;
 
 use Elastic\Elasticsearch\Exception\MissingParameterException;
 use Holoo\ModuleElasticsearch\Adapter\Interfaces\ElasticClientInterface;
-use Illuminate\Support\Facades\App;
-
+use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
 
 class Client implements ElasticClientInterface
 {
-
-    const DEFAULT_HOST='localhost:9200';
+    use ClientEndpointsTrait;
 
     /**
      * @param string $method
-     * @param string|null $host
+     * @param string|null $url
      * @param array|null $params
      * @param array|null $header
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function send($method="get", string $host=null, array $params=null, array $header=null, $type=null)
+    public function send($method="get", string $url=null, array $params=null, array $header=null, $type=null)
     {
         try {
             $client=new \GuzzleHttp\Client([
                 'http_errors'=>false,
                 'verify'=>false,
-                'headers'=>self::setHeader($header)
-
+                'headers'=>$this->setHeader($header)
             ]);
-            $response=self::getResponse($client, $method, $host, $params, $type);
+            $response=$this->getResponse($client, $method, $url, $params, $type);
             $response=$response->getBody()->getContents();
             return $response;
 
@@ -39,56 +36,25 @@ class Client implements ElasticClientInterface
     }
 
     /**
-     * @param $header
-     * @return mixed
-     */
-    private static function setHeader($header): mixed
-    {
-        if ( !empty($header) )
-            return $header;
-
-        return $headers=[
-            'Accept'=>'application/json',
-            'Content-Type'=>'application/json',
-        ];
-    }
-
-    /**
-     * @param $host
-     * @return string
-     */
-    private static function setHost($host): string
-    {
-        if ( !empty($host) ) {
-            return self::DEFAULT_HOST . $host;
-        }
-
-        if ( !empty(env('ELASTIC_SEARCH')) ) {
-            return env('ELASTIC_SEARCH') . $host;
-        }
-
-        return self::DEFAULT_HOST;
-    }
-    /**
      * @param \GuzzleHttp\Client $client
      * @param string $method
-     * @param string|null $host
+     * @param string|null $url
      * @param string|null $params
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private static function getResponse(\GuzzleHttp\Client $client, string $method, ?string $host, ?array $params, ?string $type): \Psr\Http\Message\ResponseInterface
+    private function getResponse(\GuzzleHttp\Client $client, string $method, ?string $url, ?array $params, ?string $type): \Psr\Http\Message\ResponseInterface
     {
 
         if ( !empty($type) || $type == "bulk" ) {
-            return self::requestBody($client, $method, $host, join("\n", self::RequestArrayMethod($params)) . "\n");
+            return $this->requestBody($client, $method, $url, join("\n", $this->RequestArrayMethod($params)) . "\n");
         }
 
         if ( !empty($params) ) {
-            return self::requestBody($client, $method, $host, json_encode($params));
+            return $this->requestBody($client, $method, $url, json_encode($params));
         }
 
-        return $client->request(strtoupper($method), self::setHost($host));
+        return $client->request(strtoupper($method), $this->setUrl($url));
     }
 
     /**
@@ -99,9 +65,9 @@ class Client implements ElasticClientInterface
      * @return \Psr\Http\Message\ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private static function requestBody(\GuzzleHttp\Client $client, string $method, ?string $host, $params): \Psr\Http\Message\ResponseInterface
+    private function requestBody(\GuzzleHttp\Client $client, string $method, ?string $url, $params): \Psr\Http\Message\ResponseInterface
     {
-        return $client->request($method, self::setHost($host),
+        return $client->request($method, $this->setUrl($url),
             [
                 'body'=>$params,
             ]
@@ -113,7 +79,7 @@ class Client implements ElasticClientInterface
      * @param $params
      * @return array
      */
-    private static function RequestArrayMethod($params)
+    private function RequestArrayMethod($params)
     {
         $count=count($params);
 
@@ -124,5 +90,12 @@ class Client implements ElasticClientInterface
         $result=$data;
         return $result;
     }
+
+
+
+
+
+
+
 
 }

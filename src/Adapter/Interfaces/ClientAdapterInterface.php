@@ -9,72 +9,72 @@ interface ClientAdapterInterface
      * @param array $params
      * @return mixed
      */
-    public static function info(array $params=[]);
+    public  function info(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function index(array $params=[]);
+    public  function index(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function search(array $params=[]);
+    public  function search(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function updateByQuery(array $params=[]);
+    public  function updateByQuery(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function update(array $params=[]);
+    public  function update(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function get(array $params=[]);
+    public  function get(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function query(array $params=[]);
+    public  function query(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function delete(array $params=[]);
+    public  function delete(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function bulk(array $params=[]);
+    public  function bulk(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function deleteByQuery(array $params=[]);
+    public  function deleteByQuery(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function mget(array $params=[]);
+    public  function mget(array $params=[]);
 
     /**
      * @param array $params
      * @return mixed
      */
-    public static function reindex(array $params=[]);
+    public  function reindex(array $params=[]);
 
 }

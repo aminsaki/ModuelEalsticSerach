@@ -3,234 +3,185 @@
 namespace Holoo\ModuleElasticsearch\Adapter;
 
 use Holoo\ModuleElasticsearch\Adapter\Interfaces\ClientAdapterInterface;
-use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
 
 class ElasticClient extends Client implements ClientAdapterInterface
 {
-    use ClientEndpointsTrait;
+    const DEFAULT_HOST='http://localhost:9200';
+
+
+    private string  $apiKey;
 
     /**
-     * Returns basic information about the cluster.
-     * @return mixed|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Make the constructor final so cannot be overwritten
      */
-    public static function info(array $params=[])
+    final public function __construct()
     {
-        $method='GET';
-        $url='/';
-        return self::send($method, $url, null, null,null);
     }
 
     /**
-     *  Performs a kNN search.
-     * @param array $params
-     * @return mixed|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return ElasticClient
      */
-    public static function index(array $params=[])
+    public static function create(): ElasticClient
     {
-        self::checkRequiredParameters(['index', 'body'], $params);
-
-        if ( isset($params['id']) ) {
-            $url='/' . self::encode($params['index']) . '/_doc/' . self::encode($params['id']);
-            $method='PUT';
-        } else {
-            $url='/' . self::encode($params['index']) . '/_doc';
-            $method='POST';
-        }
-        $url=self::addQueryString($url, $params, ['wait_for_active_shards', 'op_type', 'refresh', 'routing', 'timeout', 'version', 'version_type', 'if_seq_no', 'if_primary_term', 'pipeline', 'require_alias', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
-        return self::send($method, $url, $params['body'], null ,null);
+        return new static();
     }
 
-    /**
-     *Returns results matching a query.
-     * @param array $params
-     * @return mixed
-     */
-    public static function search(array $params=[])
-    {
-        if ( isset($params['index']) ) {
-            $url='/' . self::encode($params['index']) . '/_search';
-            $method=empty($params['body']) ? 'GET' : 'POST';
-        } else {
-            $url='/_search';
-            $method=empty($params['body']) ? 'GET' : 'POST';
-        }
-        $url=self::addQueryString($url, $params, ['analyzer', 'analyze_wildcard', 'ccs_minimize_roundtrips', 'default_operator', 'df', 'explain', 'stored_fields', 'docvalue_fields', 'from', 'ignore_unavailable', 'ignore_throttled', 'allow_no_indices', 'expand_wildcards', 'lenient', 'preference', 'q', 'routing', 'scroll', 'search_type', 'size', 'sort', '_source', '_source_excludes', '_source_includes', 'terminate_after', 'stats', 'suggest_field', 'suggest_mode', 'suggest_size', 'suggest_text', 'timeout', 'track_scores', 'track_total_hits', 'allow_partial_search_results', 'typed_keys', 'version', 'seq_no_primary_term', 'request_cache', 'batched_reduce_size', 'max_concurrent_shard_requests', 'pre_filter_shard_size', 'rest_total_hits_as_int', 'min_compatible_shard_node', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
-        return self::send($method, $url, $params['body'], null ,null);
-    }
 
     /**
-     * Returns a document.
+     * @param string $url
      * @param array $params
+     * @param array $keys
      * @return string
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function get(array $params=[])
+    protected function addQueryString(string $url, array $params, array $keys): string
     {
-        self::checkRequiredParameters(['id', 'index'], $params);
-        $url='/' . self::encode($params['index']) . '/_doc/' . self::encode($params['id']);
-        $method='GET';
-
-        $url=self::addQueryString($url, $params, ['stored_fields', 'preference', 'realtime', 'refresh', 'routing', '_source', '_source_excludes', '_source_includes', 'version', 'version_type', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
-        return self::send($method, $url, $params['body'], null , null);
-    }
-
-    /**
-     * Updates a document with a script or partial document.
-     * @param array $params
-     * @return string
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public static function update(array $params=[])
-    {
-        self::checkRequiredParameters(['id', 'index', 'body'], $params);
-        $url='/' . self::encode($params['index']) . '/_update/' . self::encode($params['id']);
-        $method='POST';
-
-        $url=self::addQueryString($url, $params, ['wait_for_active_shards', '_source', '_source_excludes', '_source_includes', 'lang', 'refresh', 'retry_on_conflict', 'routing', 'timeout', 'if_seq_no', 'if_primary_term', 'require_alias', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
-        return self::send($method, $url, $params['body'], null , null);
-    }
-
-    /**
-     *  Performs an update on every document in the index without changing the source,
-     * for example to pick up a mapping change.
-     * @param array $params
-     * @return mixed|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public static function updateByQuery(array $params=[])
-    {
-        self::checkRequiredParameters(['index'], $params);
-        $url='/' . self::encode($params['index']) . '/_update_by_query';
-        $method='POST';
-
-        $url=self::addQueryString($url, $params, ['analyzer', 'analyze_wildcard', 'default_operator', 'df', 'from', 'ignore_unavailable', 'allow_no_indices', 'conflicts', 'expand_wildcards', 'lenient', 'pipeline', 'preference', 'q', 'routing', 'scroll', 'search_type', 'search_timeout', 'max_docs', 'sort', 'terminate_after', 'stats', 'version', 'version_type', 'request_cache', 'refresh', 'timeout', 'wait_for_active_shards', 'scroll_size', 'wait_for_completion', 'requests_per_second', 'slices', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
-        return self::send($method, $url, $params['body'], null , null);
-    }
-
-    /**
-     * Removes a document from the index.
-     * @param array $params
-     * @return mixed|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public static function delete(array $params=[])
-    {
-        self::checkRequiredParameters(['id', 'index'], $params);
-        $url='/' . self::encode($params['index']) . '/_doc/' . self::encode($params['id']);
-        $method='DELETE';
-
-        $url=self::addQueryString($url, $params, ['wait_for_active_shards', 'refresh', 'routing', 'timeout', 'if_seq_no', 'if_primary_term', 'version', 'version_type', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
-        return self::send($method, $url, $params['body'], null , null);
-    }
-
-    /**
-     * Deletes documents matching the provided query.
-     * @param array $params
-     * @return mixed
-     */
-    public static function deleteByQuery(array $params = [])
-    {
-        self::checkRequiredParameters(['index','body'], $params);
-        $url = '/' . self::encode($params['index']) . '/_delete_by_query';
-        $method = 'POST';
-
-        $url = self::addQueryString($url, $params, ['analyzer','analyze_wildcard','default_operator','df','from','ignore_unavailable','allow_no_indices','conflicts','expand_wildcards','lenient','preference','q','routing','scroll','search_type','search_timeout','max_docs','sort','terminate_after','stats','version','request_cache','refresh','timeout','wait_for_active_shards','scroll_size','wait_for_completion','requests_per_second','slices','pretty','human','error_trace','source','filter_path']);
-
-        return self::send($method, $url, $params['body'], null , null);
-    }
-
-    /**
-     * Allows to get multiple documents in one request.
-     * @param array $params
-     * @return string
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public static function mget(array $params = [])
-    {
-        self::checkRequiredParameters(['body'], $params);
-        if (isset($params['index'])) {
-            $url = '/' . self::encode($params['index']) . '/_mget';
-            $method = empty($params['body']) ? 'GET' : 'POST';
-        } else {
-            $url = '/_mget';
-            $method = empty($params['body']) ? 'GET' : 'POST';
+        $queryParams=[];
+        foreach($keys as $k) {
+            if ( isset($params[$k]) ) {
+                $queryParams[$k]=self::convertValue($params[$k]);
+            }
         }
-        $url = self::addQueryString($url, $params, ['stored_fields','preference','realtime','refresh','routing','_source','_source_excludes','_source_includes','pretty','human','error_trace','source','filter_path']);
-
-        return self::send($method, $url, $params['body'], null , null);
-    }
-
-    /**
-     * Executes a SQL request
-     * @param array $params
-     * @return mixed
-     */
-    public static function query(array $params=[])
-    {
-        self::checkRequiredParameters(['body'], $params);
-        $url='/_sql';
-        $method=empty($params['body']) ? 'GET' : 'POST';
-
-        $url=self::addQueryString($url, $params, ['format', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
-        return self::send($method, $url, $params['body'], null , null);
-    }
-
-    /**
-     * Allows to perform multiple index/update/delete operations in a single request.
-     * @param array $params
-     * @return mixed
-     */
-    public static function bulk(array $params=[])
-    {
-        self::checkRequiredParameters(['body'], $params);
-
-        if ( isset($params['index']) ) {
-            $url='/' . self::encode($params['index']) . '/_bulk';
-            $method='POST';
-        } else {
-            $url='/_bulk';
-            $method='POST';
+        if ( empty($queryParams) ) {
+            return $url;
         }
-        $url=self::addQueryString($url, $params, ['wait_for_active_shards', 'refresh', 'routing', 'timeout', 'type', '_source', '_source_excludes', '_source_includes', 'pipeline', 'require_alias', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
+        return $url . '?' . http_build_query($queryParams);
+    }
 
-        $headers=[
+    /**
+     * Converts array to comma-separated list;
+     * Converts boolean value to true', 'false' string
+     *
+     * @param mixed $value
+     */
+    protected function convertValue($value): string
+    {
+        // Convert a boolean value in 'true' or 'false' string
+        if ( is_bool($value) ) {
+            return $value ? 'true' : 'false';
+            // Convert to comma-separated list if array
+        } elseif ( is_array($value) && self::isNestedArray($value) === false ) {
+            return implode(',', $value);
+        }
+        return (string)$value;
+    }
+
+    /**
+     * @param array $a
+     * @return bool
+     */
+    private function isNestedArray(array $a): bool
+    {
+        foreach($a as $v) {
+            if ( is_array($v) ) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if the $required parameters are present in $params
+     * @throws MissingParameterException
+     */
+    protected function checkRequiredParameters(array $required, array $params): void
+    {
+        foreach($required as $req) {
+            if ( !isset($params[$req]) ) {
+                throw new MissingParameterException(sprintf(
+                    'The parameter %s is required',
+                    $req
+                ));
+            }
+        }
+    }
+
+    /**
+     * Encode a value for a valid URL
+     *
+     * @param mixed $value
+     */
+    protected function encode($value): string
+    {
+        return urlencode(self::convertValue($value));
+    }
+
+
+    /**
+     * Set the ApiKey
+     * If the id is not specified we store the ApiKey otherwise
+     * we store as Base64(id:ApiKey)
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html
+     */
+    public function setApiKey(string $apiKey=null, string $id=null): ElasticClient
+    {
+        (empty($id)) ? $this->apiKey=$apiKey : $this->apiKey=base64_encode($id . ':' . $apiKey);
+        return $this;
+    }
+
+    /**
+     * @param $header
+     * @return mixed
+     */
+    public function setHeader($header): mixed
+    {
+        if ( !empty($this->apiKey) ) {
+            return $this->setHeaders($this->apiKey);
+        }
+        if ( !empty(config('elastic.apiKet')) ) {
+            return $this->setHeaders(config('elastic.apiKet'));
+        }
+
+        if ( !empty($header) ) {
+            return $header;
+        }
+
+        return $headers=[
             'Accept'=>'application/json',
-            'Content-Type'=>'application/x-ndjson',
+            'Content-Type'=>'application/json',
         ];
-
-        return self::send($method, $url, $params['body'], $headers ,'bulk');
-
     }
 
     /**
-     * /**
-     * Allows to copy documents from one index to another, optionally filtering the source
-     * documents by a query, changing the destination index settings, or fetching the
-     * documents from a remote cluster.
-     * @param array $params
-     * @return mixed|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * Set the hosts (nodes)
+     * @param $host
+     * @return string
      */
-    public static function reindex(array $params = [])
+    public function setHost($host=null): string
     {
-        self::checkRequiredParameters(['body'], $params);
-        $url = '/_reindex';
-        $method = 'POST';
 
-        $url = self::addQueryString($url, $params, ['refresh','timeout','wait_for_active_shards','wait_for_completion','requests_per_second','scroll','slices','max_docs','pretty','human','error_trace','source','filter_path']);
+        if ( !empty(config('elastic')) ) {
+            return config('elastic.host');
+        }
 
-        return self::send($method, $url, $params['body'], null , null);
+        if ( !empty($host) ) {
+            return $host;
+        }
+
+        return $this->DEFAULT_HOST;
     }
 
+    /**
+     * @param $url
+     * @return string
+     */
+    public function setUrl(string $url): string
+    {
+        return $this->setHost() . $url;
+    }
+
+    /**
+     * @param string|null $param
+     * @return array|string[]
+     */
+    public function setHeaders(?string $param): array
+    {
+        return $headers=[
+            'Authorization'=>"ApiKey " . $param,
+            'Accept'=>'application/json',
+            'Content-Type'=>'application/json',
+        ];
+    }
 
 
 }

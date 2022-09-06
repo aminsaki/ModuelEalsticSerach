@@ -17,7 +17,7 @@ Using this client assumes that you have an Elasticsearch server installed and ru
 You can install the client in your PHP project using composer:
   
      ...
-     // composer require a.saki/module-elasticsearch
+     // composer require holoo/module_generator
      ...
 
 
@@ -34,12 +34,40 @@ You can install the client in your PHP project using composer:
  ]
  ...
  
+ #config/elastic  
+ 
+   return [
+      
+       "host"=>env('ELASTICSEARCH_HOST', "http://localhost:9200"),
+       "apiKet"=>env('APIKET', ''),
+   
+   ];
+ 
+ 
 #Environment Configuration  .env
  
  Add the following code in the .env section  
  
    ...
      
-       ELASTIC_SEARCH ='localhost:9200'  
+    ELASTICSEARCH_HOST =https://localhost:9200
+    APIKET=Qk4xUUVZTUJPem1VXzdpM3JEdms6eVdfSDcxRnlRcnlYY2NNMkNRdmFuZw==
    ...
   
+  
+  #exmple code  
+    ... 
+     
+         public function info()
+      {
+              $result = ElasticClient::create()
+                   ->info();
+    
+           $re =   json_decode($result , true);
+           dd($re);
+      } 
+      
+     ...   
+     
+ [a. link](https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/index_management.html   
+)
