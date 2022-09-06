@@ -64,8 +64,8 @@ You can install the client in your PHP project using composer:
               $result = ElasticClient::create()
                    ->info();
     
-           $re =   json_decode($result , true);
-           dd($re);
+           $results =   json_decode($result , true);
+           dd($results);
       } 
       
      ...   
