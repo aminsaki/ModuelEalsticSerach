@@ -14,9 +14,9 @@
     ],
     "require": {
         "php": "^8.0.2",
-        "guzzlehttp/guzzle": "^7.2"
+        "guzzlehttp/guzzle": "^7.2",
+        "ext-http": "*"
     },
-
     "extra": {
         "laravel": {
             "providers": [

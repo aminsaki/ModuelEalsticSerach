@@ -28,7 +28,8 @@ You can install the client in your PHP project using composer:
 
      ...
      // \Holoo\ModuleElasticsearch\ServiceProvider\ModuleElasticSearchServiceProvider::class,
-
+       
+     //php artisan vendor:publish --tag=elastic_serach
      ...
     
  ]
