@@ -17,7 +17,7 @@ Using this client assumes that you have an Elasticsearch server installed and ru
 You can install the client in your PHP project using composer:
   
      ...
-     // composer require holoo/module_generator
+     // composer require holoo/module-elasticsearch
      ...
 
 
