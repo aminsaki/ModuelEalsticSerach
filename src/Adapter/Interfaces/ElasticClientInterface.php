@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Holoo\ModuleElasticsearch\Adapter\Interfaces;
 
 interface ElasticClientInterface

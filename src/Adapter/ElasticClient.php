@@ -3,11 +3,13 @@
 namespace Holoo\ModuleElasticsearch\Adapter;
 
 use Holoo\ModuleElasticsearch\Adapter\Interfaces\ClientAdapterInterface;
+use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
 
 class ElasticClient extends Client implements ClientAdapterInterface
 {
-    const DEFAULT_HOST='http://localhost:9200';
+    use ClientEndpointsTrait;
 
+    const DEFAULT_HOST='http://localhost:9200';
 
     private string  $apiKey;
 
@@ -26,6 +28,82 @@ class ElasticClient extends Client implements ClientAdapterInterface
         return new static();
     }
 
+    /**
+     * Set the ApiKey
+     * If the id is not specified we store the ApiKey otherwise
+     * we store as Base64(id:ApiKey)
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html
+     */
+    public function setApiKey(string $apiKey=null, string $id=null): ElasticClient
+    {
+        (empty($id)) ? $this->apiKey=$apiKey : $this->apiKey=base64_encode($id . ':' . $apiKey);
+        return $this;
+    }
+
+    /**
+     * @param $header
+     * @return mixed
+     */
+    public function setHeader($header): mixed
+    {
+        if ( !empty($this->apiKey) ) {
+            return $this->setHeaders($this->apiKey);
+        }
+        if ( !empty(config('elastic.apiKet')) ) {
+            return $this->setHeaders(config('elastic.apiKet'));
+        }
+
+        if ( !empty($header) ) {
+            return $header;
+        }
+
+        return $headers=[
+            'Accept'=>'application/json',
+            'Content-Type'=>'application/json',
+        ];
+    }
+
+    /**
+     * @param string|null $param
+     * @return array|string[]
+     */
+    public function setHeaders(?string $param): array
+    {
+        return $headers=[
+            'Authorization'=>"ApiKey " . $param,
+            'Accept'=>'application/json',
+            'Content-Type'=>'application/json',
+        ];
+    }
+
+    /**
+     * @param $url
+     * @return string
+     */
+    public function setUrl(string $url): string
+    {
+        return $this->setHost() . $url;
+    }
+
+    /**
+     * Set the hosts (nodes)
+     * @param $host
+     * @return string
+     */
+    public function setHost($host=null): string
+    {
+
+        if ( !empty(config('elastic')) ) {
+            return config('elastic.host');
+        }
+
+        if ( !empty($host) ) {
+            return $host;
+        }
+
+        return self::DEFAULT_HOST;
+    }
 
     /**
      * @param string $url
@@ -104,84 +182,4 @@ class ElasticClient extends Client implements ClientAdapterInterface
     {
         return urlencode(self::convertValue($value));
     }
-
-
-    /**
-     * Set the ApiKey
-     * If the id is not specified we store the ApiKey otherwise
-     * we store as Base64(id:ApiKey)
-     *
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html
-     */
-    public function setApiKey(string $apiKey=null, string $id=null): ElasticClient
-    {
-        (empty($id)) ? $this->apiKey=$apiKey : $this->apiKey=base64_encode($id . ':' . $apiKey);
-        return $this;
-    }
-
-    /**
-     * @param $header
-     * @return mixed
-     */
-    public function setHeader($header): mixed
-    {
-        if ( !empty($this->apiKey) ) {
-            return $this->setHeaders($this->apiKey);
-        }
-        if ( !empty(config('elastic.apiKet')) ) {
-            return $this->setHeaders(config('elastic.apiKet'));
-        }
-
-        if ( !empty($header) ) {
-            return $header;
-        }
-
-        return $headers=[
-            'Accept'=>'application/json',
-            'Content-Type'=>'application/json',
-        ];
-    }
-
-    /**
-     * Set the hosts (nodes)
-     * @param $host
-     * @return string
-     */
-    public function setHost($host=null): string
-    {
-
-        if ( !empty(config('elastic')) ) {
-            return config('elastic.host');
-        }
-
-        if ( !empty($host) ) {
-            return $host;
-        }
-
-        return self::DEFAULT_HOST;
-    }
-
-    /**
-     * @param $url
-     * @return string
-     */
-    public function setUrl(string $url): string
-    {
-        return $this->setHost() . $url;
-    }
-
-    /**
-     * @param string|null $param
-     * @return array|string[]
-     */
-    public function setHeaders(?string $param): array
-    {
-        return $headers=[
-            'Authorization'=>"ApiKey " . $param,
-            'Accept'=>'application/json',
-            'Content-Type'=>'application/json',
-        ];
-    }
-
-
 }

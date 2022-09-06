@@ -45,15 +45,12 @@ class Client implements ElasticClientInterface
      */
     private function getResponse(\GuzzleHttp\Client $client, string $method, ?string $url, ?array $params, ?string $type): \Psr\Http\Message\ResponseInterface
     {
-
         if ( !empty($type) || $type == "bulk" ) {
             return $this->requestBody($client, $method, $url, join("\n", $this->RequestArrayMethod($params)) . "\n");
         }
-
         if ( !empty($params) ) {
             return $this->requestBody($client, $method, $url, json_encode($params));
         }
-
         return $client->request(strtoupper($method), $this->setUrl($url));
     }
 
@@ -90,12 +87,5 @@ class Client implements ElasticClientInterface
         $result=$data;
         return $result;
     }
-
-
-
-
-
-
-
 
 }

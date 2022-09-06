@@ -17,7 +17,6 @@ class ModuleElasticSearchServiceProvider extends  ServiceProvider
     public function register()
     {
         $this->app->instance('elasticClient', new ElasticClient());
-        $this->mergeConfigFrom(__DIR__.'/../config/elastic.php', 'elastic');
     }
     /**
      * Bootstrap any application services.
