@@ -26,10 +26,9 @@ class ModuleElasticSearchServiceProvider extends  ServiceProvider
      */
     public function boot()
     {
-
         $this->publishes([
             __DIR__.'/../config/elastic.php' => config_path('elastic.php'),
-        ], 'elastic');
+        ], 'elastic-group');
         $this->app->singleton(ClientAdapterInterface::class,ElasticClient::class);
     }
 
