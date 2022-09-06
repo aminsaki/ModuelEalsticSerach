@@ -158,7 +158,7 @@ class ElasticClient extends Client implements ClientAdapterInterface
             return $host;
         }
 
-        return $this->DEFAULT_HOST;
+        return self::DEFAULT_HOST;
     }
 
     /**

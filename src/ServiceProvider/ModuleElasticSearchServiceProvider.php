@@ -17,9 +17,7 @@ class ModuleElasticSearchServiceProvider extends  ServiceProvider
     public function register()
     {
         $this->app->instance('elasticClient', new ElasticClient());
-
     }
-
     /**
      * Bootstrap any application services.
      *
@@ -27,8 +25,10 @@ class ModuleElasticSearchServiceProvider extends  ServiceProvider
      */
     public function boot()
     {
+        $this->publishes([
+            __DIR__.'/../config/elastic.php' => config_path('elastic.php'),
+        ]);
         $this->app->singleton(ClientAdapterInterface::class,ElasticClient::class);
-
     }
 
 
