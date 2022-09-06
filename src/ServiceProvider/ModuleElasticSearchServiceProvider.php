@@ -28,15 +28,15 @@ class ModuleElasticSearchServiceProvider extends  ServiceProvider
     public function boot()
     {
         $this->app->singleton(ClientAdapterInterface::class,ElasticClient::class);
-        $this->getPublishes();
+        $this->publishes([
+            __DIR__ . '/../config/elastic.php'=>config_path(' elastic.php'),
+        ]);
 
     }
 
     protected function getPublishes(): void
     {
-        $this->publishes([
-            __DIR__ . '/../config/elastic.php'=>config_path(' elastic.php'),
-        ]);
+
 
     }
 
