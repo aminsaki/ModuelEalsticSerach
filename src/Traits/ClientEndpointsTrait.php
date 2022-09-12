@@ -3,9 +3,6 @@
 
 namespace Holoo\ModuleElasticsearch\Traits;
 
-use Elastic\Elasticsearch\ClientBuilder;
-use Holoo\ModuleElasticsearch\Adapter\ElasticClient;
-
 trait ClientEndpointsTrait
 {
 
@@ -14,12 +11,11 @@ trait ClientEndpointsTrait
      * @return mixed|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public  function info(array $params=[])
+    public function info(array $params=[])
     {
         $method='GET';
         $url='/';
-
-        return $this->send($method, $url, null, null,null);
+        return $this->send($method, $url, null, $this->getHeader(), null);
     }
 
     /**
@@ -28,7 +24,7 @@ trait ClientEndpointsTrait
      * @return mixed|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public  function index(array $params=[])
+    public function index(array $params=[])
     {
         $this->checkRequiredParameters(['index', 'body'], $params);
 
@@ -41,7 +37,7 @@ trait ClientEndpointsTrait
         }
         $url=$this->addQueryString($url, $params, ['wait_for_active_shards', 'op_type', 'refresh', 'routing', 'timeout', 'version', 'version_type', 'if_seq_no', 'if_primary_term', 'pipeline', 'require_alias', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null ,null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -49,7 +45,7 @@ trait ClientEndpointsTrait
      * @param array $params
      * @return mixed
      */
-    public  function search(array $params=[])
+    public function search(array $params=[])
     {
         if ( isset($params['index']) ) {
             $url='/' . $this->encode($params['index']) . '/_search';
@@ -60,7 +56,7 @@ trait ClientEndpointsTrait
         }
         $url=$this->addQueryString($url, $params, ['analyzer', 'analyze_wildcard', 'ccs_minimize_roundtrips', 'default_operator', 'df', 'explain', 'stored_fields', 'docvalue_fields', 'from', 'ignore_unavailable', 'ignore_throttled', 'allow_no_indices', 'expand_wildcards', 'lenient', 'preference', 'q', 'routing', 'scroll', 'search_type', 'size', 'sort', '_source', '_source_excludes', '_source_includes', 'terminate_after', 'stats', 'suggest_field', 'suggest_mode', 'suggest_size', 'suggest_text', 'timeout', 'track_scores', 'track_total_hits', 'allow_partial_search_results', 'typed_keys', 'version', 'seq_no_primary_term', 'request_cache', 'batched_reduce_size', 'max_concurrent_shard_requests', 'pre_filter_shard_size', 'rest_total_hits_as_int', 'min_compatible_shard_node', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null ,null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -69,7 +65,7 @@ trait ClientEndpointsTrait
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public  function get(array $params=[])
+    public function get(array $params=[])
     {
         $this->checkRequiredParameters(['id', 'index'], $params);
         $url='/' . $this->encode($params['index']) . '/_doc/' . $this->encode($params['id']);
@@ -77,7 +73,7 @@ trait ClientEndpointsTrait
 
         $url=$this->addQueryString($url, $params, ['stored_fields', 'preference', 'realtime', 'refresh', 'routing', '_source', '_source_excludes', '_source_includes', 'version', 'version_type', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null , null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -86,7 +82,7 @@ trait ClientEndpointsTrait
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public  function update(array $params=[])
+    public function update(array $params=[])
     {
         $this->checkRequiredParameters(['id', 'index', 'body'], $params);
         $url='/' . $this->encode($params['index']) . '/_update/' . $this->encode($params['id']);
@@ -94,7 +90,7 @@ trait ClientEndpointsTrait
 
         $url=$this->addQueryString($url, $params, ['wait_for_active_shards', '_source', '_source_excludes', '_source_includes', 'lang', 'refresh', 'retry_on_conflict', 'routing', 'timeout', 'if_seq_no', 'if_primary_term', 'require_alias', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null , null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -104,7 +100,7 @@ trait ClientEndpointsTrait
      * @return mixed|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public  function updateByQuery(array $params=[])
+    public function updateByQuery(array $params=[])
     {
         $this->checkRequiredParameters(['index'], $params);
         $url='/' . $this->encode($params['index']) . '/_update_by_query';
@@ -112,7 +108,7 @@ trait ClientEndpointsTrait
 
         $url=$this->addQueryString($url, $params, ['analyzer', 'analyze_wildcard', 'default_operator', 'df', 'from', 'ignore_unavailable', 'allow_no_indices', 'conflicts', 'expand_wildcards', 'lenient', 'pipeline', 'preference', 'q', 'routing', 'scroll', 'search_type', 'search_timeout', 'max_docs', 'sort', 'terminate_after', 'stats', 'version', 'version_type', 'request_cache', 'refresh', 'timeout', 'wait_for_active_shards', 'scroll_size', 'wait_for_completion', 'requests_per_second', 'slices', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null , null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -121,7 +117,7 @@ trait ClientEndpointsTrait
      * @return mixed|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public  function delete(array $params=[])
+    public function delete(array $params=[])
     {
         $this->checkRequiredParameters(['id', 'index'], $params);
         $url='/' . $this->encode($params['index']) . '/_doc/' . $this->encode($params['id']);
@@ -129,7 +125,7 @@ trait ClientEndpointsTrait
 
         $url=$this->addQueryString($url, $params, ['wait_for_active_shards', 'refresh', 'routing', 'timeout', 'if_seq_no', 'if_primary_term', 'version', 'version_type', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null , null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -137,15 +133,15 @@ trait ClientEndpointsTrait
      * @param array $params
      * @return mixed
      */
-    public  function deleteByQuery(array $params = [])
+    public function deleteByQuery(array $params=[])
     {
-        $this->checkRequiredParameters(['index','body'], $params);
-        $url = '/' . $this->encode($params['index']) . '/_delete_by_query';
-        $method = 'POST';
+        $this->checkRequiredParameters(['index', 'body'], $params);
+        $url='/' . $this->encode($params['index']) . '/_delete_by_query';
+        $method='POST';
 
-        $url = $this->addQueryString($url, $params, ['analyzer','analyze_wildcard','default_operator','df','from','ignore_unavailable','allow_no_indices','conflicts','expand_wildcards','lenient','preference','q','routing','scroll','search_type','search_timeout','max_docs','sort','terminate_after','stats','version','request_cache','refresh','timeout','wait_for_active_shards','scroll_size','wait_for_completion','requests_per_second','slices','pretty','human','error_trace','source','filter_path']);
+        $url=$this->addQueryString($url, $params, ['analyzer', 'analyze_wildcard', 'default_operator', 'df', 'from', 'ignore_unavailable', 'allow_no_indices', 'conflicts', 'expand_wildcards', 'lenient', 'preference', 'q', 'routing', 'scroll', 'search_type', 'search_timeout', 'max_docs', 'sort', 'terminate_after', 'stats', 'version', 'request_cache', 'refresh', 'timeout', 'wait_for_active_shards', 'scroll_size', 'wait_for_completion', 'requests_per_second', 'slices', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null , null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -154,19 +150,19 @@ trait ClientEndpointsTrait
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public  function mget(array $params = [])
+    public function mget(array $params=[])
     {
         $this->checkRequiredParameters(['body'], $params);
-        if (isset($params['index'])) {
-            $url = '/' . $this->encode($params['index']) . '/_mget';
-            $method = empty($params['body']) ? 'GET' : 'POST';
+        if ( isset($params['index']) ) {
+            $url='/' . $this->encode($params['index']) . '/_mget';
+            $method=empty($params['body']) ? 'GET' : 'POST';
         } else {
-            $url = '/_mget';
-            $method = empty($params['body']) ? 'GET' : 'POST';
+            $url='/_mget';
+            $method=empty($params['body']) ? 'GET' : 'POST';
         }
-        $url = $this->addQueryString($url, $params, ['stored_fields','preference','realtime','refresh','routing','_source','_source_excludes','_source_includes','pretty','human','error_trace','source','filter_path']);
+        $url=$this->addQueryString($url, $params, ['stored_fields', 'preference', 'realtime', 'refresh', 'routing', '_source', '_source_excludes', '_source_includes', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null , null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -174,7 +170,7 @@ trait ClientEndpointsTrait
      * @param array $params
      * @return mixed
      */
-    public  function query(array $params=[])
+    public function query(array $params=[])
     {
         $this->checkRequiredParameters(['body'], $params);
         $url='/_sql';
@@ -182,7 +178,7 @@ trait ClientEndpointsTrait
 
         $url=$this->addQueryString($url, $params, ['format', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null , null);
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
     /**
@@ -190,7 +186,7 @@ trait ClientEndpointsTrait
      * @param array $params
      * @return mixed
      */
-    public  function bulk(array $params=[])
+    public function bulk(array $params=[])
     {
         $this->checkRequiredParameters(['body'], $params);
 
@@ -208,7 +204,7 @@ trait ClientEndpointsTrait
             'Content-Type'=>'application/x-ndjson',
         ];
 
-        return $this->send($method, $url, $params['body'], $headers ,'bulk');
+        return $this->send($method, $url, $params['body'], $headers, 'bulk');
 
     }
 
@@ -221,15 +217,34 @@ trait ClientEndpointsTrait
      * @return mixed|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public  function reindex(array $params = [])
+    public function reindex(array $params=[])
     {
         $this->checkRequiredParameters(['body'], $params);
-        $url = '/_reindex';
-        $method = 'POST';
+        $url='/_reindex';
+        $method='POST';
 
-        $url = $this->addQueryString($url, $params, ['refresh','timeout','wait_for_active_shards','wait_for_completion','requests_per_second','scroll','slices','max_docs','pretty','human','error_trace','source','filter_path']);
+        $url=$this->addQueryString($url, $params, ['refresh', 'timeout', 'wait_for_active_shards', 'wait_for_completion', 'requests_per_second', 'scroll', 'slices', 'max_docs', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], null , null);
+        return $this->send($method, $url, $params['body'], null, null);
+    }
+
+    /**
+     * Returns multiple termvectors in one request.
+     * @param array $params
+     * @return mixed
+     */
+    public function mtermvectors(array $params=[])
+    {
+        if ( isset($params['index']) ) {
+            $url='/' . $this->encode($params['index']) . '/_mtermvectors';
+            $method=empty($params['body']) ? 'GET' : 'POST';
+        } else {
+            $url='/_mtermvectors';
+            $method=empty($params['body']) ? 'GET' : 'POST';
+        }
+        $url=$this->addQueryString($url, $params, ['ids', 'term_statistics', 'field_statistics', 'fields', 'offsets', 'positions', 'payloads', 'preference', 'routing', 'realtime', 'version', 'version_type', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
+
+        return $this->send($method, $url, $params['body'], null, null);
     }
 
 }

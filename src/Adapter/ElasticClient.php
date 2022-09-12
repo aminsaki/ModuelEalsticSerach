@@ -2,20 +2,20 @@
 
 namespace Holoo\ModuleElasticsearch\Adapter;
 
-use Holoo\ModuleElasticsearch\Adapter\Interfaces\ClientAdapterInterface;
 use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
 
-class ElasticClient extends Client implements ClientAdapterInterface
+class ElasticClient extends Client
 {
     use ClientEndpointsTrait;
 
     const DEFAULT_HOST='http://localhost:9200';
 
-    private string  $apiKey;
+    protected string  $apiKey;
 
-    /**
-     * Make the constructor final so cannot be overwritten
-     */
+
+//    /**
+//     * Make the constructor final so cannot be overwritten
+//     */
     final public function __construct()
     {
     }
@@ -38,14 +38,15 @@ class ElasticClient extends Client implements ClientAdapterInterface
     public function setApiKey(string $apiKey=null, string $id=null): ElasticClient
     {
         (empty($id)) ? $this->apiKey=$apiKey : $this->apiKey=base64_encode($id . ':' . $apiKey);
+
         return $this;
     }
 
     /**
-     * @param $header
-     * @return mixed
+     * @param array|null $header
+     * @return array|string[]
      */
-    public function setHeader($header): mixed
+    public function getHeader(array $header = null):array
     {
         if ( !empty($this->apiKey) ) {
             return $this->setHeaders($this->apiKey);
@@ -58,7 +59,7 @@ class ElasticClient extends Client implements ClientAdapterInterface
             return $header;
         }
 
-        return $headers=[
+        return $this->headers=[
             'Accept'=>'application/json',
             'Content-Type'=>'application/json',
         ];
@@ -70,7 +71,7 @@ class ElasticClient extends Client implements ClientAdapterInterface
      */
     public function setHeaders(?string $param): array
     {
-        return $headers=[
+        return [
             'Authorization'=>"ApiKey " . $param,
             'Accept'=>'application/json',
             'Content-Type'=>'application/json',

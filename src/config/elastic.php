@@ -3,6 +3,6 @@
 return [
 
     "host"=>env('ELASTICSEARCH_HOST', "http://localhost:9200"),
-    "apiKet"=>env('APIKET', ''),
+    "apiKet"=>env('APIKET', 'SnBvREo0TUJUbkVrcEZXRmYzYnU6X2Z4QnZGR3lRMFNiR0VTR2I0X1JlQQ=='),
 
 ];

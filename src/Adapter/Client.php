@@ -3,10 +3,11 @@
 namespace Holoo\ModuleElasticsearch\Adapter;
 
 use Elastic\Elasticsearch\Exception\MissingParameterException;
+use Holoo\ModuleElasticsearch\Adapter\Interfaces\ClientAdapterInterface;
 use Holoo\ModuleElasticsearch\Adapter\Interfaces\ElasticClientInterface;
 use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
-
-class Client implements ElasticClientInterface
+///ClientAdapterInterface
+class Client  implements ElasticClientInterface
 {
     use ClientEndpointsTrait;
 
@@ -24,7 +25,7 @@ class Client implements ElasticClientInterface
             $client=new \GuzzleHttp\Client([
                 'http_errors'=>false,
                 'verify'=>false,
-                'headers'=>$this->setHeader($header)
+                'headers'=>$header
             ]);
             $response=$this->getResponse($client, $method, $url, $params, $type);
             $response=$response->getBody()->getContents();
@@ -64,6 +65,7 @@ class Client implements ElasticClientInterface
      */
     private function requestBody(\GuzzleHttp\Client $client, string $method, ?string $url, $params): \Psr\Http\Message\ResponseInterface
     {
+        dd($params);
         return $client->request($method, $this->setUrl($url),
             [
                 'body'=>$params,
