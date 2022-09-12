@@ -65,7 +65,6 @@ class Client  implements ElasticClientInterface
      */
     private function requestBody(\GuzzleHttp\Client $client, string $method, ?string $url, $params): \Psr\Http\Message\ResponseInterface
     {
-        dd($params);
         return $client->request($method, $this->setUrl($url),
             [
                 'body'=>$params,

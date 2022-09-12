@@ -75,6 +75,7 @@ class ElasticClient extends Client
             'Authorization'=>"ApiKey " . $param,
             'Accept'=>'application/json',
             'Content-Type'=>'application/json',
+
         ];
     }
 
