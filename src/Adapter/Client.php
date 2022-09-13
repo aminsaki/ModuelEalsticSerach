@@ -1,12 +1,11 @@
 <?php
 
 namespace Holoo\ModuleElasticsearch\Adapter;
-
 use Elastic\Elasticsearch\Exception\MissingParameterException;
 use Holoo\ModuleElasticsearch\Adapter\Interfaces\ClientAdapterInterface;
 use Holoo\ModuleElasticsearch\Adapter\Interfaces\ElasticClientInterface;
 use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
-///ClientAdapterInterface
+
 class Client  implements ElasticClientInterface
 {
     use ClientEndpointsTrait;
@@ -32,11 +31,12 @@ class Client  implements ElasticClientInterface
             return $response;
 
         } catch (GuzzleException  $exception) {
-            throw new \Exception($exception->getMessage());
+              throw new \Exception($exception->getMessage());
         }
     }
 
     /**
+     * This method is for single submission
      * @param \GuzzleHttp\Client $client
      * @param string $method
      * @param string|null $url
@@ -80,7 +80,6 @@ class Client  implements ElasticClientInterface
     private function RequestArrayMethod($params)
     {
         $count=count($params);
-
         for($i=0; $i < $count; $i++) {
             $val=$params[$i];
             $data[]=(($i % 2) == 0) ? json_encode([array_keys($val)[0]=>array_values($val)[0]]) : json_encode($val);

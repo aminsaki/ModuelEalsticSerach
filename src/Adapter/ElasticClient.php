@@ -12,10 +12,9 @@ class ElasticClient extends Client
 
     protected string  $apiKey;
 
-
-//    /**
-//     * Make the constructor final so cannot be overwritten
-//     */
+    /**
+     * ElasticClient constructor.
+     */
     final public function __construct()
     {
     }
@@ -35,7 +34,7 @@ class ElasticClient extends Client
      *
      * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html
      */
-    public function setApiKey(string $apiKey=null, string $id=null): ElasticClient
+    private function setApiKey(string $apiKey=null, string $id=null): ElasticClient
     {
         (empty($id)) ? $this->apiKey=$apiKey : $this->apiKey=base64_encode($id . ':' . $apiKey);
 
@@ -69,7 +68,7 @@ class ElasticClient extends Client
      * @param string|null $param
      * @return array|string[]
      */
-    public function setHeaders(?string $param): array
+     private function setHeaders(?string $param): array
     {
         return [
             'Authorization'=>"ApiKey " . $param,
@@ -83,7 +82,7 @@ class ElasticClient extends Client
      * @param $url
      * @return string
      */
-    public function setUrl(string $url): string
+    private function setUrl(string $url): string
     {
         return $this->setHost() . $url;
     }
@@ -93,7 +92,7 @@ class ElasticClient extends Client
      * @param $host
      * @return string
      */
-    public function setHost($host=null): string
+    private function setHost($host=null): string
     {
 
         if ( !empty(config('elastic')) ) {
