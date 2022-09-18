@@ -33,7 +33,8 @@ You can install the client in your PHP project using composer:
    return [
       
        "host"=>env('ELASTICSEARCH_HOST', "http://localhost:9200"),
-       "apiKet"=>env('APIKET', ''),
+       "apiKet"=>env('APIKET', ''), 
+        apiket
    ];
  
 #Environment Configuration  .env
@@ -42,10 +43,11 @@ You can install the client in your PHP project using composer:
    ...
      
     ELASTICSEARCH_HOST =https://localhost:9200
-    APIKET=Qk4xUUVZTUJPem1VXzdpM3JEdms6eVdfSDcxRnlRcnlYY2NNMkNRdmFuZw==
+    APIKET=""
    ...
   #exmple code  
     ... 
+    
      public function info()
       {
           $result = ElasticClient::create()

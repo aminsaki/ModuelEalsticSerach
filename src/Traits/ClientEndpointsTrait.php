@@ -19,13 +19,14 @@ trait ClientEndpointsTrait
     }
 
     /**
-     *  Performs a kNN search.
-     * @param array $params
-     * @return mixed|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @param string|null $index
+     * @param string|null $id
+     * @param array|null $body
+     * @return mixed
      */
-    public function index(array $params=[])
+    public function index(string $index=null, string $id=null, array $body=null)
     {
+        $params=$this->indexing($index, $id, $body);
         $this->checkRequiredParameters(['index', 'body'], $params);
 
         if ( isset($params['id']) ) {
@@ -83,8 +84,10 @@ trait ClientEndpointsTrait
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function update(array $params=[])
+    public function update(string $index=null, string $id, array $body)
     {
+        $params=$this->updateing($index, $id, $body);
+
         $this->checkRequiredParameters(['id', 'index', 'body'], $params);
         $url='/' . $this->encode($params['index']) . '/_update/' . $this->encode($params['id']);
         $method='POST';
@@ -103,6 +106,7 @@ trait ClientEndpointsTrait
      */
     public function updateByQuery(array $params=[])
     {
+
         $this->checkRequiredParameters(['index'], $params);
         $url='/' . $this->encode($params['index']) . '/_update_by_query';
         $method='POST';
@@ -114,19 +118,20 @@ trait ClientEndpointsTrait
 
     /**
      * Removes a document from the index.
-     * @param array $params
-     * @return mixed|string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @param string $index
+     * @param string $id
+     * @return mixed
      */
-    public function delete(array $params=[])
+    public function delete(string $index, string $id)
     {
+        $params=$this->delteing($index, $id);
         $this->checkRequiredParameters(['id', 'index'], $params);
         $url='/' . $this->encode($params['index']) . '/_doc/' . $this->encode($params['id']);
         $method='DELETE';
 
         $url=$this->addQueryString($url, $params, ['wait_for_active_shards', 'refresh', 'routing', 'timeout', 'if_seq_no', 'if_primary_term', 'version', 'version_type', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], $this->getHeader(), null);
+        return $this->send($method, $url, null, $this->getHeader(), null);
     }
 
     /**
