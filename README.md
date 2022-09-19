@@ -33,7 +33,7 @@ You can install the client in your PHP project using composer:
    return [
       
        "host"=>env('ELASTICSEARCH_HOST', "http://localhost:9200"),
-       "apiKey"=>env('APIKEy', ''), 
+       "apiKey"=>env('APIKEY', ''), 
        
    ];
  
