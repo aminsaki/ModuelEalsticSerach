@@ -26,7 +26,7 @@ trait ClientEndpointsTrait
      */
     public function index(string $index=null, string $id=null, array $body=null)
     {
-        $params=$this->indexing($index, $id, $body);
+        $params=$this->setDataIndex($index, $id, $body);
         $this->checkRequiredParameters(['index', 'body'], $params);
 
         if ( isset($params['id']) ) {
@@ -47,8 +47,9 @@ trait ClientEndpointsTrait
      * @param array $params
      * @return mixed
      */
-    public function search(array $params=[])
+    public function search(string $index=null, string $key, string $val)
     {
+        $params=$this->setDataSerach($index, $key, $val);
         if ( isset($params['index']) ) {
             $url='/' . $this->encode($params['index']) . '/_search';
             $method=empty($params['body']) ? 'GET' : 'POST';
@@ -67,7 +68,7 @@ trait ClientEndpointsTrait
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get(array $params=[])
+    public function get(array $params)
     {
         $this->checkRequiredParameters(['id', 'index'], $params);
         $url='/' . $this->encode($params['index']) . '/_doc/' . $this->encode($params['id']);
@@ -86,7 +87,7 @@ trait ClientEndpointsTrait
      */
     public function update(string $index=null, string $id, array $body)
     {
-        $params=$this->updateing($index, $id, $body);
+        $params=$this->setDataUpdate($index, $id, $body);
 
         $this->checkRequiredParameters(['id', 'index', 'body'], $params);
         $url='/' . $this->encode($params['index']) . '/_update/' . $this->encode($params['id']);
@@ -104,9 +105,9 @@ trait ClientEndpointsTrait
      * @return mixed|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function updateByQuery(array $params=[])
+    public function updateByQuery(string $index=null, string $name, string $value)
     {
-
+        $params=$this->setDataUpdateQuery($index=null, $name, $value);
         $this->checkRequiredParameters(['index'], $params);
         $url='/' . $this->encode($params['index']) . '/_update_by_query';
         $method='POST';
@@ -124,7 +125,7 @@ trait ClientEndpointsTrait
      */
     public function delete(string $index, string $id)
     {
-        $params=$this->delteing($index, $id);
+        $params=$this->setDataDelete($index, $id);
         $this->checkRequiredParameters(['id', 'index'], $params);
         $url='/' . $this->encode($params['index']) . '/_doc/' . $this->encode($params['id']);
         $method='DELETE';
@@ -139,8 +140,9 @@ trait ClientEndpointsTrait
      * @param array $params
      * @return mixed
      */
-    public function deleteByQuery(array $params=[])
+    public function deleteByQuery($index, $params)
     {
+        $params=$this->setDataDeleteQuery($index, $params);
         $this->checkRequiredParameters(['index', 'body'], $params);
         $url='/' . $this->encode($params['index']) . '/_delete_by_query';
         $method='POST';
@@ -152,12 +154,14 @@ trait ClientEndpointsTrait
 
     /**
      * Allows to get multiple documents in one request.
-     * @param array $params
-     * @return string
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @param string $index
+     * @param string $id
+     * @return mixed
      */
-    public function mget(array $params=[])
+    public function mget(array $params)
     {
+        $params=$this->setDataMget($params);
+
         $this->checkRequiredParameters(['body'], $params);
         if ( isset($params['index']) ) {
             $url='/' . $this->encode($params['index']) . '/_mget';
@@ -176,8 +180,9 @@ trait ClientEndpointsTrait
      * @param array $params
      * @return mixed
      */
-    public function query(array $params=[])
+    public function query(string $query_sql)
     {
+        $params=$this->setDataQuery($query_sql);
         $this->checkRequiredParameters(['body'], $params);
         $url='/_sql';
         $method=empty($params['body']) ? 'GET' : 'POST';
@@ -194,6 +199,7 @@ trait ClientEndpointsTrait
      */
     public function bulk(array $params=[])
     {
+        $params=$this->setDataBulk();
         $this->checkRequiredParameters(['body'], $params);
 
         if ( isset($params['index']) ) {
@@ -221,8 +227,9 @@ trait ClientEndpointsTrait
      * @return mixed|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function reindex(array $params=[])
+    public function reindex(string $source, string $dest)
     {
+        $params=$this->setDataReindex($source, $dest);
         $this->checkRequiredParameters(['body'], $params);
         $url='/_reindex';
         $method='POST';
@@ -237,8 +244,9 @@ trait ClientEndpointsTrait
      * @param array $params
      * @return mixed
      */
-    public function mtermvectors(array $params=[])
+    public function mtermvectors($index, $id, $idTwo, $fields)
     {
+        $params=$this->setDataMtermvectors($index, $id, $idTwo, $fields);
         if ( isset($params['index']) ) {
             $url='/' . $this->encode($params['index']) . '/_mtermvectors';
             $method=empty($params['body']) ? 'GET' : 'POST';

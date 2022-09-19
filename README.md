@@ -33,8 +33,8 @@ You can install the client in your PHP project using composer:
    return [
       
        "host"=>env('ELASTICSEARCH_HOST', "http://localhost:9200"),
-       "apiKet"=>env('APIKET', ''), 
-        apiket
+       "apiKey"=>env('APIKEy', ''), 
+       
    ];
  
 #Environment Configuration  .env
@@ -43,7 +43,7 @@ You can install the client in your PHP project using composer:
    ...
      
     ELASTICSEARCH_HOST =https://localhost:9200
-    APIKET=""
+    APIKEY=""
    ...
   #exmple code  
     ... 

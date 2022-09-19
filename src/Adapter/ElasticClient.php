@@ -3,10 +3,11 @@
 namespace Holoo\ModuleElasticsearch\Adapter;
 
 use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
+use Holoo\ModuleElasticsearch\Traits\SetValueTrait;
 
 class ElasticClient extends Client
 {
-    use ClientEndpointsTrait;
+    use ClientEndpointsTrait , SetValueTrait;
 
     const DEFAULT_HOST='http://localhost:9200';
 
@@ -27,31 +28,6 @@ class ElasticClient extends Client
         return new static();
     }
 
-    /**
-     *  TODO  This section should be refactor
-     */
-    public function indexing(string $index=null, string $id=null, array $body=null)
-    {
-        $params['index']=$index;
-        $params['id']=isset($id) ? $id : "";
-        $params['body']=$body;
-        return $params;
-    }
-
-    public function updateing(string $index=null, string $id, array $body=null)
-    {
-        $params['index']=$index;
-        $params['id']=$id;
-        $params['body']['doc']=$body;
-        return $params;
-    }
-
-    public function delteing(string $index, string $id)
-    {
-        $params['index']=$index;
-        $params['id']=$id;
-        return $params;
-    }
 
     /**
      * @param array|null $header
@@ -62,8 +38,8 @@ class ElasticClient extends Client
         if ( !empty($this->apiKey) ) {
             return $this->setHeaders($this->apiKey);
         }
-        if ( !empty(config('elastic.apiKet')) ) {
-            return $this->setHeaders(config('elastic.apiKet'));
+        if ( !empty(config('elastic.apiKey')) ) {
+            return $this->setHeaders(config('elastic.apiKey'));
         }
 
         if ( !empty($header) ) {
@@ -129,7 +105,7 @@ class ElasticClient extends Client
         $queryParams=[];
         foreach($keys as $k) {
             if ( isset($params[$k]) ) {
-                $queryParams[$k]=self::convertValue($params[$k]);
+                $queryParams[$k]=$this->convertValue($params[$k]);
             }
         }
         if ( empty($queryParams) ) {
@@ -150,7 +126,7 @@ class ElasticClient extends Client
         if ( is_bool($value) ) {
             return $value ? 'true' : 'false';
             // Convert to comma-separated list if array
-        } elseif ( is_array($value) && self::isNestedArray($value) === false ) {
+        } elseif ( is_array($value) && $this->isNestedArray($value) === false ) {
             return implode(',', $value);
         }
         return (string)$value;
@@ -193,7 +169,7 @@ class ElasticClient extends Client
      */
     protected function encode($value): string
     {
-        return urlencode(self::convertValue($value));
+        return urlencode($this->convertValue($value));
     }
 
     /**
