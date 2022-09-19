@@ -43,6 +43,25 @@ trait ClientEndpointsTrait
     }
 
     /**
+     * Updates the index mappings.
+     * @param string $index
+     * @param array $mapping
+     * @return mixed
+     */
+    public function putMapping(string $index, array $mapping=[])
+    {
+        $params=$this->setDataputMapping($index, $mapping);
+        $this->checkRequiredParameters(['index', 'body'], $params);
+        $url='/' . $this->encode($params['index']) . '/_mapping';
+        $method='PUT';
+
+        $url=$this->addQueryString($url, $params, ['timeout', 'master_timeout', 'ignore_unavailable', 'allow_no_indices', 'expand_wildcards', 'write_index_only', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
+
+        return $this->send($method, $url, $params['body'], $this->getHeader(), null);
+
+    }
+
+    /**
      *Returns results matching a query.
      * @param array $params
      * @return mixed
@@ -240,12 +259,16 @@ trait ClientEndpointsTrait
 
     /**
      * Returns multiple termvectors in one request.
-     * @param array $params
+     * @param $index
+     * @param $id
+     * @param $idTwo
+     * @param $fields
+     * @param $term_statistics
      * @return mixed
      */
-    public function mtermvectors($index, $id, $idTwo, $fields)
+    public function mtermvectors($index, $id, $idTwo, $fields, $term_statistics=null)
     {
-        $params=$this->setDataMtermvectors($index, $id, $idTwo, $fields);
+        $params=$this->setDataMtermvectors($index, $id, $idTwo, $fields, $term_statistics);
         if ( isset($params['index']) ) {
             $url='/' . $this->encode($params['index']) . '/_mtermvectors';
             $method=empty($params['body']) ? 'GET' : 'POST';

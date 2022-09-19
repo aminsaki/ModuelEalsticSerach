@@ -7,6 +7,25 @@ namespace Holoo\ModuleElasticsearch\Traits;
 trait SetValueTrait
 {
     /**
+     * @param string $index
+     * @param array $mapping
+     * @return array[]
+     */
+    public static function setDataputMapping(string $index, array $mapping=[])
+    {
+        $params=[
+            "body"=>[
+                'index'=>$index,
+                "mappings"=>[
+                    'properties'=>[
+                        $mapping
+                    ]
+                ]
+            ]
+        ];
+        return $params;
+    }
+    /**
      *  TODO  This section should be refactor
      */
     /**
@@ -15,7 +34,7 @@ trait SetValueTrait
      * @param array|null $body
      * @return mixed
      */
-    public function setDataIndex(string $index=null, string $id=null, array $body=null):mixed
+    public function setDataIndex(string $index=null, string $id=null, array $body=null): mixed
     {
         $params['index']=$index;
         $params['id']=isset($id) ? $id : "";
@@ -29,7 +48,7 @@ trait SetValueTrait
      * @param array|null $body
      * @return mixed
      */
-    public function setDataUpdate(string $index=null, string $id, array $body=null):mixed
+    public function setDataUpdate(string $index=null, string $id, array $body=null): mixed
     {
         $params['index']=$index;
         $params['id']=$id;
@@ -42,7 +61,7 @@ trait SetValueTrait
      * @param string $id
      * @return mixed
      */
-    public function setDataDelete(string $index, string $id):mixed
+    public function setDataDelete(string $index, string $id): mixed
     {
         $params['index']=$index;
         $params['id']=$id;
@@ -53,7 +72,7 @@ trait SetValueTrait
      * @param array $params
      * @return array
      */
-    public function setDataMget(array $params):mixed
+    public function setDataMget(array $params): mixed
     {
         $params["body"]['docs']=$params;
         return $params;
@@ -64,7 +83,7 @@ trait SetValueTrait
      * @param string $key
      * @param string $val
      */
-    public function setDataSerach(string $index=null, string $key, string $val):mixed
+    public function setDataSerach(string $index=null, string $key, string $val): mixed
     {
 
         $params['index']=$index;
@@ -76,7 +95,7 @@ trait SetValueTrait
      * @param string $query
      * @return \string[][]
      */
-    public function setDataQuery(string $query):mixed
+    public function setDataQuery(string $query): mixed
     {
         $params=[
             'body'=>array(
@@ -92,7 +111,7 @@ trait SetValueTrait
      * @param string $dest
      * @return \string[][][]
      */
-    public function setDataReindex(string $source, string $dest):mixed
+    public function setDataReindex(string $source, string $dest): mixed
     {
         $params=[
             'body'=>[
@@ -113,7 +132,7 @@ trait SetValueTrait
      * @param string $value
      * @return array
      */
-    public function setDataUpdateQuery($index, string $name, string $value):mixed
+    public function setDataUpdateQuery($index, string $name, string $value): mixed
     {
         $params=[
             'index'=>!empty($index) ? $index : "_all",
@@ -138,7 +157,7 @@ trait SetValueTrait
      * @param array $param
      * @return array
      */
-    public function setDataDeleteQuery($index, array $param):mixed
+    public function setDataDeleteQuery($index, array $param): mixed
     {
         $params=[
             'index'=>'user',
@@ -175,9 +194,10 @@ trait SetValueTrait
      * @param $id
      * @param $idTwo
      * @param $fields
-     * @return \array[][][]
+     * @param bool $term_statistics
+     * @return array|\array[][][]
      */
-    public function setDataMtermvectors($index, $id, $idTwo, $fields):array
+    public function setDataMtermvectors($index, $id, $idTwo, $fields, $term_statistics): array
     {
         $params=[
             "body"=>[
@@ -185,7 +205,7 @@ trait SetValueTrait
                     [
                         "_index"=>$index,
                         "_id"=>"$id",
-                        "term_statistics"=>true
+                        "term_statistics"=>$term_statistics ? $term_statistics : true
                     ],
                     [
                         "_index"=>$index,
