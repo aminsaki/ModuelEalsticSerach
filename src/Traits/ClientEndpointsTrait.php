@@ -213,7 +213,6 @@ trait ClientEndpointsTrait
 
         $headers=array_merge($this->getHeader(), ['Content-Type'=>'application/x-ndjson']);
 
-        dd($headers);
         return $this->send($method, $url, $params['body'], $headers, 'bulk');
 
     }
