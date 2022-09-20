@@ -11,22 +11,23 @@ trait SetValueTrait
     /**
      * @param string $index
      * @param array $mapping
-     * @return array[]
+     * @return array|array[]
      */
-    public static function setDataputMapping(string $index, array $mapping=[])
+    public static function setDataputMapping(string $index, array $mapping=[]): array
     {
         $params=[
+            'index'=>$index,
             "body"=>[
-                'index'=>$index,
-                "mappings"=>[
-                    'properties'=>[
-                        $mapping
-                    ]
-                ]
+                '_source'=>[
+                    'enabled'=>true
+                ],
+                'properties'=>$mapping
             ]
         ];
+
         return $params;
     }
+
     /*
     * @param string|null $index
     * @param string|null $id
@@ -54,6 +55,7 @@ trait SetValueTrait
         $params['body']['doc']=$body;
         return $params;
     }
+
     /**
      * @param string $index
      * @param string $id
@@ -65,6 +67,7 @@ trait SetValueTrait
         $params['id']=$id;
         return $params;
     }
+
     /**
      * @param array $params
      * @return array
@@ -74,6 +77,7 @@ trait SetValueTrait
         $params["body"]['docs']=$params;
         return $params;
     }
+
     /**
      * @param string|null $index
      * @param string $key
@@ -85,6 +89,7 @@ trait SetValueTrait
         $params['body']['query']['match'][$key]=$val;
         return $params;
     }
+
     /***
      * @param string $query
      * @return \string[][]
@@ -98,6 +103,7 @@ trait SetValueTrait
         ];
         return $params;
     }
+
     /**
      * @param string $source
      * @param string $dest
@@ -117,6 +123,7 @@ trait SetValueTrait
         ];
         return $params;
     }
+
     /**
      * @param $index
      * @param string $name
@@ -141,6 +148,7 @@ trait SetValueTrait
         ];
         return $params;
     }
+
     /***
      * @param $index
      * @param array $param
@@ -158,23 +166,25 @@ trait SetValueTrait
         ];
         return $params;
     }
+
     /**
-     *
+     * @param string $index
+     * @param array $body
+     * @param string $action
      */
-    public function setDataBulk()
+    public function setDataBulk(string $index, array $body, string $action)
     {
-        for($i=0; $i < 100; $i++) {
-            $params['body'][]=[
-                'index'=>[
-                    '_index'=>'my_index',
-                ]
-            ];
-            $params['body'][]=[
-                'my_field'=>'my_value',
-                'second_field'=>'some more values'
-            ];
-        }
+        $action=!empty($action) ? $action : "index";
+        $params['body'][]=[
+            "${action}"=>[
+                '_index'=>$index,
+            ]
+        ];
+        $params['body'][]=$body;
+
+        return $params;
     }
+
     /**
      * @param $index
      * @param $id
@@ -203,5 +213,6 @@ trait SetValueTrait
         ];
         return $params;
     }
+
 
 }

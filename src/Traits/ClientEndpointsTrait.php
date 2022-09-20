@@ -18,6 +18,19 @@ trait ClientEndpointsTrait
         return $this->send($method, $url, null, $this->getHeader(), null);
     }
 
+    public function lists(string $index)
+    {
+
+        $url='/' . $this->encode($index) . '/_search';
+
+        $method='GET';
+
+
+        return $this->send($method, $url, null, $this->getHeader(), null);
+
+
+    }
+
     /**
      * @param string|null $index
      * @param string|null $id
@@ -89,6 +102,7 @@ trait ClientEndpointsTrait
      */
     public function get(array $params)
     {
+        $this->setDataGet();
         $this->checkRequiredParameters(['id', 'index'], $params);
         $url='/' . $this->encode($params['index']) . '/_doc/' . $this->encode($params['id']);
         $method='GET';
@@ -211,14 +225,16 @@ trait ClientEndpointsTrait
         return $this->send($method, $url, $params['body'], $this->getHeader(), null);
     }
 
-    /**
+    /***
      * Allows to perform multiple index/update/delete operations in a single request.
-     * @param array $params
+     * @param string $index
+     * @param array $body
+     * @param string $action
      * @return mixed
      */
-    public function bulk(array $params=[])
+    public function bulk(string $index, array $body, string $action)
     {
-        $params=$this->setDataBulk();
+        $params=$this->setDataBulk($index, $body, $action);
         $this->checkRequiredParameters(['body'], $params);
 
         if ( isset($params['index']) ) {

@@ -7,7 +7,7 @@ use Holoo\ModuleElasticsearch\Traits\SetValueTrait;
 
 class ElasticClient extends Client
 {
-    use ClientEndpointsTrait , SetValueTrait;
+    use ClientEndpointsTrait, SetValueTrait;
 
     const DEFAULT_HOST='http://localhost:9200';
 
@@ -28,6 +28,34 @@ class ElasticClient extends Client
         return new static();
     }
 
+    /**
+     * @param $result
+     * @return array|string
+     */
+    public function resultHit($result)
+    {
+        $list=[];
+
+        $result=json_decode($result, true);
+
+        if ( isset($result['result']) ) {
+            $result=sprintf("This information has been %s successfully", $result['result']);
+            return response()->json($result);
+        }
+
+        if ( isset($result->error) ) {
+            return response()->json($result->error->reason);
+
+        }
+
+        if ( !empty($result->hits->hits) ) {
+
+            foreach($result['hits']['hits'] as $key=>$value) {
+                $list[]=$value['_source'];
+            }
+            return   json_decode($list, true);
+        }
+    }
 
     /**
      * @param array|null $header
