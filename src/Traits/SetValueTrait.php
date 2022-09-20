@@ -3,7 +3,9 @@
 
 namespace Holoo\ModuleElasticsearch\Traits;
 
-
+/**
+ *  TODO  This section should be refactor
+ */
 trait SetValueTrait
 {
     /**
@@ -25,15 +27,12 @@ trait SetValueTrait
         ];
         return $params;
     }
-    /**
-     *  TODO  This section should be refactor
-     */
-    /**
-     * @param string|null $index
-     * @param string|null $id
-     * @param array|null $body
-     * @return mixed
-     */
+    /*
+    * @param string|null $index
+    * @param string|null $id
+    * @param array|null $body
+    * @return mixed
+    */
     public function setDataIndex(string $index=null, string $id=null, array $body=null): mixed
     {
         $params['index']=$index;
@@ -55,7 +54,6 @@ trait SetValueTrait
         $params['body']['doc']=$body;
         return $params;
     }
-
     /**
      * @param string $index
      * @param string $id
@@ -67,7 +65,6 @@ trait SetValueTrait
         $params['id']=$id;
         return $params;
     }
-
     /**
      * @param array $params
      * @return array
@@ -77,7 +74,6 @@ trait SetValueTrait
         $params["body"]['docs']=$params;
         return $params;
     }
-
     /**
      * @param string|null $index
      * @param string $key
@@ -85,12 +81,10 @@ trait SetValueTrait
      */
     public function setDataSerach(string $index=null, string $key, string $val): mixed
     {
-
         $params['index']=$index;
         $params['body']['query']['match'][$key]=$val;
         return $params;
     }
-
     /***
      * @param string $query
      * @return \string[][]
@@ -101,11 +95,9 @@ trait SetValueTrait
             'body'=>array(
                 'query'=>$query
             )
-
         ];
         return $params;
     }
-
     /**
      * @param string $source
      * @param string $dest
@@ -125,7 +117,6 @@ trait SetValueTrait
         ];
         return $params;
     }
-
     /**
      * @param $index
      * @param string $name
@@ -146,12 +137,10 @@ trait SetValueTrait
                         "${name}"=>$value
                     ]
                 ]
-
             ]
         ];
         return $params;
     }
-
     /***
      * @param $index
      * @param array $param
@@ -169,13 +158,11 @@ trait SetValueTrait
         ];
         return $params;
     }
-
     /**
      *
      */
     public function setDataBulk()
     {
-
         for($i=0; $i < 100; $i++) {
             $params['body'][]=[
                 'index'=>[
@@ -188,7 +175,6 @@ trait SetValueTrait
             ];
         }
     }
-
     /**
      * @param $index
      * @param $id
@@ -215,7 +201,6 @@ trait SetValueTrait
                 ]
             ]
         ];
-
         return $params;
     }
 
