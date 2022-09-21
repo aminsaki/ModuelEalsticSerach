@@ -194,3 +194,31 @@ For example
              return $r;
           } 
        ..    
+
+# Dsl  query  elastic Serach 
+
+Using this method, you can enter sql database
+This method is for someone who is not familiar with elastic serach
+For example
+
+
+
+#lists 
+
+This method is used to display the tables that exist in elasticserach
+
+A parameter takes the name of the table
+ 
+Note: If you want to display all the tables, you must use the word -all
+
+For example
+
+ 
+     public function lists ()
+         {
+             $result=ElasticClient::create();
+              $re=$result->lists ('index');  ///  name table or _all
+             $r=$result->resultHit($re);
+             return $r;
+          } 
+       .. 

@@ -30,31 +30,32 @@ class ElasticClient extends Client
 
     /**
      * @param $result
-     * @return array|string
+     * @return mixed
      */
-    public function resultHit($result)
+    public function resultHit($result): mixed
     {
         $list=[];
 
         $result=json_decode($result, true);
 
+
+        if ( isset($result->error) ) return response()->json($result->error->reason);
+
+
         if ( isset($result['result']) ) {
-            $result=sprintf("This information has been %s successfully", $result['result']);
+            $result="This information has been {$result['result']} successfully";
             return response()->json($result);
         }
 
-        if ( isset($result->error) ) {
-            return response()->json($result->error->reason);
-
-        }
 
         if ( !empty($result->hits->hits) ) {
 
-            foreach($result['hits']['hits'] as $key=>$value) {
-                $list[]=$value['_source'];
-            }
-            return   json_decode($list, true);
+            foreach($result['hits']['hits'] as $key=>$value) $list[]=$value['_source'];
+
+            if ( !empty($list) ) return json_decode($list, true);
         }
+
+        return $result;
     }
 
     /**
@@ -63,16 +64,11 @@ class ElasticClient extends Client
      */
     protected function getHeader(array $header=null): array
     {
-        if ( !empty($this->apiKey) ) {
-            return $this->setHeaders($this->apiKey);
-        }
-        if ( !empty(config('elastic.apiKey')) ) {
-            return $this->setHeaders(config('elastic.apiKey'));
-        }
+        if ( !empty($this->apiKey) ) return $this->setHeaders($this->apiKey);
 
-        if ( !empty($header) ) {
-            return $header;
-        }
+        if ( !empty(config('elastic.apiKey')) ) return $this->setHeaders(config('elastic.apiKey'));
+
+        if ( !empty($header) ) return $header;
 
         return $this->headers=[
             'Accept'=>'application/json',
@@ -110,14 +106,9 @@ class ElasticClient extends Client
      */
     private function setHost($host=null): string
     {
+        if ( !empty(config('elastic')) ) return config('elastic.host');
 
-        if ( !empty(config('elastic')) ) {
-            return config('elastic.host');
-        }
-
-        if ( !empty($host) ) {
-            return $host;
-        }
+        if ( !empty($host) ) return $host;
 
         return self::DEFAULT_HOST;
     }
@@ -131,14 +122,14 @@ class ElasticClient extends Client
     protected function addQueryString(string $url, array $params, array $keys): string
     {
         $queryParams=[];
+
         foreach($keys as $k) {
-            if ( isset($params[$k]) ) {
-                $queryParams[$k]=$this->convertValue($params[$k]);
-            }
+            if ( isset($params[$k]) ) $queryParams[$k]=$this->convertValue($params[$k]);
         }
-        if ( empty($queryParams) ) {
-            return $url;
-        }
+
+
+        if ( empty($queryParams) ) return $url;
+
         return $url . '?' . http_build_query($queryParams);
     }
 
