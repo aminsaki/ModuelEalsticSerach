@@ -201,7 +201,14 @@ Using this method, you can enter sql database
 This method is for someone who is not familiar with elastic serach
 For example
 
-
+     public function lists ()
+         {
+             $result=ElasticClient::create();
+              $re=$result->query("select * from index);  ///  name table  name index 
+             $r=$result->resultHit($re);
+             return $r;
+          } 
+       .. 
 
 # lists 
 
@@ -217,7 +224,7 @@ For example
      public function lists ()
          {
              $result=ElasticClient::create();
-              $re=$result->lists ('index');  ///  name table or _all
+              $re=$result->lists('index');  ///  name table or _all
              $r=$result->resultHit($re);
              return $r;
           } 
