@@ -1,8 +1,8 @@
-#moduel Laravel-Elasticsearch  for laravel  9 
+# moduel Laravel-Elasticsearch  for laravel  9 
 
 
 Build Status Total Downloads Latest Stable Version Latest Stable Version License
-#Getting started 
+# Getting started 
 
 Using this client assumes that you have an Elasticsearch server installed and running.
 
@@ -11,7 +11,7 @@ You can install the client in your PHP project using composer:
 Once you’ve run a composer update command, you must register the Laravel service provider in your config/app.php file.
 
 
-# install
+#  install
 Using this client assumes that you have an Elasticsearch server installed and running.
 
 You can install the client in your PHP project using composer:
@@ -20,7 +20,7 @@ You can install the client in your PHP project using composer:
      // composer require holoo/module-elasticsearch
      ...
 
-#config/app.php 
+# config/app.php 
 
  'providers' => [
      ...
@@ -29,7 +29,7 @@ You can install the client in your PHP project using composer:
      //php artisan vendor:publish --tag=elastic_serach
      ...
  ]
- #config/elastic  
+ # config/elastic  
    return [
       
        "host"=>env('ELASTICSEARCH_HOST', "http://localhost:9200"),
@@ -37,7 +37,7 @@ You can install the client in your PHP project using composer:
        
    ];
  
-#Environment Configuration  .env
+# Environment Configuration  .env
  
  Add the following code in the .env section  
    ...
@@ -45,10 +45,10 @@ You can install the client in your PHP project using composer:
     ELASTICSEARCH_HOST =https://localhost:9200
     APIKEY=""
    ...
-  #exmple code   
+  # exmple code   
    
    -------------------------------------------
-   #index 
+   # index 
    //This insert is in elasticserach
      That you
      It has two sides
@@ -71,12 +71,12 @@ You can install the client in your PHP project using composer:
     
     
    
-#serach
+# serach
 
 This is for elastic search
 which includes three parameters
 First parameter:
-The name of the table is the name you entered in the #index field
+The name of the table is the name you entered in the # index field
 
 The second part is the name of the field you are going to search for
 
@@ -96,7 +96,7 @@ For example
        } 
      ...
      
-#delete 
+# delete 
 
 To delete information in Elastic Search, two must be entered
 The first list is the name of the table written in the list field
@@ -115,7 +115,7 @@ For example
         } 
      ...
      
- #bulk 
+ # bulk 
  
  This method is for doing several operations together
  For example, delete, add and update
@@ -142,7 +142,7 @@ For example
       
       
       
- #reindex 
+ # reindex 
  This method has a task
  Take a chat from your table
  
@@ -165,7 +165,7 @@ For example
 
 
 
-#mtermvectors  
+#  mtermvectors  
 
 Retrieves multiple term vectors with a single request. 
 
@@ -203,7 +203,7 @@ For example
 
 
 
-#lists 
+# lists 
 
 This method is used to display the tables that exist in elasticserach
 
