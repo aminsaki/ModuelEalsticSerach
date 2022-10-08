@@ -219,7 +219,6 @@ A parameter takes the name of the table
 Note: If you want to display all the tables, you must use the word -all
 
 For example
-
  
      public function lists ()
          {

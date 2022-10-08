@@ -4,7 +4,9 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
+            "Holoo\\ModuleElasticsearch\\Tests\\": "tests/",
             "Holoo\\ModuleElasticsearch\\": "src/"
+
         }
     },
     "authors": [
@@ -12,10 +14,30 @@
             "name": "amin"
         }
     ],
+    "autoload-dev": {
+        "classmap": [
+            "tests/TestCase.php"
+        ],
+        "psr-4": {
+            "Tests\\": "tests/",
+            "Holoo\\ModuleElasticsearch\\Tests\\": "tests/"
+        }
+    },
     "require": {
         "php": "^8.0.2",
         "guzzlehttp/guzzle": "^7.2",
-        "ext-http": "*"
+        "php-http/mock-client": "^1.5",
+        "psr/log": "^1.1.0"
+    },
+    "require-dev": {
+        "fakerphp/faker": "^1.9.1",
+        "laravel/pint": "^1.0",
+        "laravel/sail": "^1.0.1",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^6.1",
+        "phpunit/phpunit": "^9.5",
+        "spatie/laravel-ignition": "^1.0",
+        "orchestra/testbench": "^7.7"
     },
     "extra": {
         "laravel": {

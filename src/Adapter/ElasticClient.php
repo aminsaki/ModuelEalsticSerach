@@ -4,8 +4,10 @@ namespace Holoo\ModuleElasticsearch\Adapter;
 
 use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
 use Holoo\ModuleElasticsearch\Traits\SetValueTrait;
+use Illuminate\Support\Facades\Config;
 
-class ElasticClient extends Client
+
+class   ElasticClient extends Client
 {
     use ClientEndpointsTrait, SetValueTrait;
 
@@ -16,10 +18,6 @@ class ElasticClient extends Client
     /**
      * ElasticClient constructor.
      */
-    final public function __construct()
-    {
-    }
-
     /**
      * @return ElasticClient
      */
@@ -38,7 +36,6 @@ class ElasticClient extends Client
 
         $result=json_decode($result, true);
 
-
         if ( isset($result->error) ) return response()->json($result->error->reason);
 
 
@@ -55,20 +52,21 @@ class ElasticClient extends Client
             if ( !empty($list) ) return json_decode($list, true);
         }
 
-        return $result;
+         return json_encode($result , true);
     }
 
     /**
      * @param array|null $header
      * @return array|string[]
      */
-    protected function getHeader(array $header=null): array
+    public function getHeader(array $header=null): array
     {
         if ( !empty($this->apiKey) ) return $this->setHeaders($this->apiKey);
 
         if ( !empty(config('elastic.apiKey')) ) return $this->setHeaders(config('elastic.apiKey'));
 
         if ( !empty($header) ) return $header;
+
 
         return $this->headers=[
             'Accept'=>'application/json',
@@ -91,6 +89,20 @@ class ElasticClient extends Client
     }
 
     /**
+     * Set the ApiKey
+     * If the id is not specified we store the ApiKey otherwise
+     * we store as Base64(id:ApiKey)
+     *
+     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html
+     */
+    public function setApiKey(string $apiKey=null, string $id=null): ElasticClient
+    {
+        (empty($id)) ? $this->apiKey=$apiKey : $this->apiKey=base64_encode($id . ':' . $apiKey);
+
+        return $this;
+    }
+
+    /**
      * @param $url
      * @return string
      */
@@ -104,13 +116,13 @@ class ElasticClient extends Client
      * @param $host
      * @return string
      */
-    private function setHost($host=null): string
+    public function setHost(string $host=null): string
     {
-        if ( !empty(config('elastic')) ) return config('elastic.host');
+        if ( !empty(config('elastic')) ) {
+            return config('elastic.host');
+        }
 
-        if ( !empty($host) ) return $host;
-
-        return self::DEFAULT_HOST;
+        return (!empty($host)) ? $host : self::DEFAULT_HOST;
     }
 
     /**
@@ -189,19 +201,5 @@ class ElasticClient extends Client
     protected function encode($value): string
     {
         return urlencode($this->convertValue($value));
-    }
-
-    /**
-     * Set the ApiKey
-     * If the id is not specified we store the ApiKey otherwise
-     * we store as Base64(id:ApiKey)
-     *
-     * @see https://www.elastic.co/guide/en/elasticsearch/reference/current/security-api-create-api-key.html
-     */
-    private function setApiKey(string $apiKey=null, string $id=null): ElasticClient
-    {
-        (empty($id)) ? $this->apiKey=$apiKey : $this->apiKey=base64_encode($id . ':' . $apiKey);
-
-        return $this;
     }
 }

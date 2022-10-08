@@ -11,7 +11,7 @@ trait ClientEndpointsTrait
      * @return mixed|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function info(array $params=[])
+    public function info()
     {
         $method='GET';
         $url='/';
@@ -50,7 +50,6 @@ trait ClientEndpointsTrait
             $method='POST';
         }
         $url=$this->addQueryString($url, $params, ['wait_for_active_shards', 'op_type', 'refresh', 'routing', 'timeout', 'version', 'version_type', 'if_seq_no', 'if_primary_term', 'pipeline', 'require_alias', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
         return $this->send($method, $url, $params['body'], $this->getHeader(), null);
 
     }
