@@ -76,8 +76,6 @@ trait SetValueTrait
     {
         $params["body"]['docs']=$params;
         return $params;
-
-
     }
 
     /**
