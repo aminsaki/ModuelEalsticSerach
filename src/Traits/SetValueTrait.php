@@ -76,6 +76,8 @@ trait SetValueTrait
     {
         $params["body"]['docs']=$params;
         return $params;
+
+
     }
 
     /**
@@ -212,6 +214,14 @@ trait SetValueTrait
             ]
         ];
         return $params;
+    }
+
+    public function setDataGet(string $index, $id)
+    {
+        return [
+            'index'=>$index,
+            'id'=>$id
+        ];
     }
 
 

@@ -4,7 +4,6 @@ namespace Holoo\ModuleElasticsearch\Adapter;
 
 use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
 use Holoo\ModuleElasticsearch\Traits\SetValueTrait;
-use Illuminate\Support\Facades\Config;
 
 
 class   ElasticClient extends Client
@@ -52,7 +51,7 @@ class   ElasticClient extends Client
             if ( !empty($list) ) return json_decode($list, true);
         }
 
-         return json_encode($result , true);
+        return $result;
     }
 
     /**

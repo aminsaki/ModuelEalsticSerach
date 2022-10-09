@@ -99,16 +99,16 @@ trait ClientEndpointsTrait
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get(array $params)
+    public function get(string $index, $id)
     {
-        $this->setDataGet();
+        $params=$this->setDataGet($index, $id);
         $this->checkRequiredParameters(['id', 'index'], $params);
         $url='/' . $this->encode($params['index']) . '/_doc/' . $this->encode($params['id']);
         $method='GET';
 
         $url=$this->addQueryString($url, $params, ['stored_fields', 'preference', 'realtime', 'refresh', 'routing', '_source', '_source_excludes', '_source_includes', 'version', 'version_type', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
 
-        return $this->send($method, $url, $params['body'], $this->getHeader(), null);
+        return $this->send($method, $url, null, $this->getHeader(), null);
     }
 
     /**
@@ -193,7 +193,6 @@ trait ClientEndpointsTrait
     public function mget(array $params)
     {
         $params=$this->setDataMget($params);
-
         $this->checkRequiredParameters(['body'], $params);
         if ( isset($params['index']) ) {
             $url='/' . $this->encode($params['index']) . '/_mget';
