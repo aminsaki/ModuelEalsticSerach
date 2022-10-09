@@ -27,9 +27,8 @@ class Client  implements ElasticClientInterface
                 'headers'=>$header
             ]);
             $response=$this->getResponse($client, $method, $url, $params, $type);
-
             $response=$response->getBody()->getContents();
-            return $response;
+            return $response ;
 
         } catch (GuzzleException  $exception) {
               throw new \Exception($exception->getMessage());

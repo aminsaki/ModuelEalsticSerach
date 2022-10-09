@@ -2,20 +2,25 @@
 
 namespace Holoo\ModuleElasticsearch\Test\Feature;
 
-
-use Holoo\ModuleElasticsearch\Adapter\ElasticClient;
+use Holoo\ModuleElasticsearch\Test\Traits\ServicesTraits;
 use Holoo\ModuleElasticsearch\Tests\TestCase;
 
 class InfoTest extends TestCase
 {
+
     public function test_method_info_not_empty()
     {
-        $result=ElasticClient::create();
+        $result=json_decode($this->client()->info(), true);
 
-        $result=json_decode($result->info(), true);
-
-        $this->assertNotEmpty($result); //an assertion
-
+        $this->assertNotEmpty($result);
     }
+
+    public function test_method_info_json()
+    {
+        $result=json_decode($this->client()->index('index', 'my18888448', ['body'=>"this is one test"]), true);
+
+        $this->assertJson(json_encode($result));
+    }
+
 
 }
