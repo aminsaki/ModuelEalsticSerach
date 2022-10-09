@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Holoo\ModuleElasticsearch\Traits;
-
 /**
  *  TODO  This section should be refactor
  */
@@ -24,7 +22,6 @@ trait SetValueTrait
                 'properties'=>$mapping
             ]
         ];
-
         return $params;
     }
 

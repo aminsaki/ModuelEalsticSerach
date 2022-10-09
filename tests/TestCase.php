@@ -12,8 +12,6 @@ abstract class TestCase extends BaseTestCase
     protected string  $id;
     protected string  $body;
 
-
-
     public function setUp(): void
     {
         parent::setUp();

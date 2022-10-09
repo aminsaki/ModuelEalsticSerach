@@ -1,9 +1,7 @@
 <?php
 
-
 namespace Holoo\ModuleElasticsearch\ServiceProvider;
 use Carbon\Laravel\ServiceProvider;
-
 use Holoo\ModuleElasticsearch\Adapter\ElasticClient;
 use Holoo\ModuleElasticsearch\Adapter\Interfaces\ClientAdapterInterface;
 

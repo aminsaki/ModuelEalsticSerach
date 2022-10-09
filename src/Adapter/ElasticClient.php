@@ -5,7 +5,6 @@ namespace Holoo\ModuleElasticsearch\Adapter;
 use Holoo\ModuleElasticsearch\Traits\ClientEndpointsTrait;
 use Holoo\ModuleElasticsearch\Traits\SetValueTrait;
 
-
 class   ElasticClient extends Client
 {
     use ClientEndpointsTrait, SetValueTrait;

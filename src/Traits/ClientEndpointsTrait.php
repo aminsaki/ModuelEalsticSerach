@@ -1,11 +1,9 @@
 <?php
 
-
 namespace Holoo\ModuleElasticsearch\Traits;
 
 trait ClientEndpointsTrait
 {
-
     /**
      * Returns basic information about the cluster.
      * @return mixed|string
@@ -20,15 +18,9 @@ trait ClientEndpointsTrait
 
     public function lists(string $index)
     {
-
         $url='/' . $this->encode($index) . '/_search';
-
         $method='GET';
-
-
         return $this->send($method, $url, null, $this->getHeader(), null);
-
-
     }
 
     /**
@@ -51,7 +43,6 @@ trait ClientEndpointsTrait
         }
         $url=$this->addQueryString($url, $params, ['wait_for_active_shards', 'op_type', 'refresh', 'routing', 'timeout', 'version', 'version_type', 'if_seq_no', 'if_primary_term', 'pipeline', 'require_alias', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
         return $this->send($method, $url, $params['body'], $this->getHeader(), null);
-
     }
 
     /**
@@ -66,11 +57,8 @@ trait ClientEndpointsTrait
         $this->checkRequiredParameters(['index', 'body'], $params);
         $url='/' . $this->encode($params['index']) . '/_mapping';
         $method='PUT';
-
         $url=$this->addQueryString($url, $params, ['timeout', 'master_timeout', 'ignore_unavailable', 'allow_no_indices', 'expand_wildcards', 'write_index_only', 'pretty', 'human', 'error_trace', 'source', 'filter_path']);
-
         return $this->send($method, $url, $params['body'], $this->getHeader(), null);
-
     }
 
     /**
@@ -247,7 +235,6 @@ trait ClientEndpointsTrait
         $headers=array_merge($this->getHeader(), ['Content-Type'=>'application/x-ndjson']);
 
         return $this->send($method, $url, $params['body'], $headers, 'bulk');
-
     }
 
     /**
