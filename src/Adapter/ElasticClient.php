@@ -105,7 +105,7 @@ class   ElasticClient extends Client
      * @param $url
      * @return string
      */
-    protected function setUrl(string $url): string
+    public function setUrl(string $url): string
     {
         return $this->setHost() . $url;
     }
