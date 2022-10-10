@@ -46,7 +46,7 @@ class ClientTest extends TestCase
     {
         $client=new ElasticClient();
         $method='GET';
-        $url='/not url';
+        $url='/';
 
         $headers=[
 //            'Authorization'=>"ApiKey " . config('elastic.apiKey'),
