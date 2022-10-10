@@ -1,14 +1,13 @@
 <?php
 
 
-namespace Holoo\ModuleElasticsearch\Test\Unit;
+namespace Holoo\ModuleElasticsearch\Test\Unit\QueryElastic;
 
 
 use Holoo\ModuleElasticsearch\Tests\TestCase;
 
-class QueryTest extends TestCase
+class successfullyTest extends TestCase
 {
-
     public function test_method_query_It_is_done_successfully()
     {
         $index=strtolower(fake()->lastName());
@@ -19,12 +18,5 @@ class QueryTest extends TestCase
         $result=json_decode($this->client()->query("select * from {$index}"), true);
 
         $this->assertJson(json_encode($result)); //an assertion
-    }
-
-    public function test_method_query_make_an_error()
-    {
-        $result=json_decode($this->client()->query("select * from Shop"), true);
-        $this->assertEquals(400, $result['status']);
-
     }
 }

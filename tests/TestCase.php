@@ -37,7 +37,6 @@ abstract class TestCase extends BaseTestCase
             ModuleElasticSearchServiceProvider::class,
         ];
     }
-
     protected function client()
     {
         return ElasticClient::create();
